@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight } from "lucide-react";
+import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,15 +25,16 @@ interface CompareResult {
 }
 
 export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalculatorProps) => {
+  // Common currency for fair comparison
+  const [currency, setCurrency] = useState("FCFA");
+
   // Ship state
-  const [shipCurrency, setShipCurrency] = useState("FCFA");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
 
   // Plane state
-  const [planeCurrency, setPlaneCurrency] = useState("FCFA");
   const [planeTarifKg, setPlaneTarifKg] = useState("");
   const [planeWeight, setPlaneWeight] = useState("");
 
@@ -49,14 +50,23 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
     const planeTarif = parseFloat(planeTarifKg);
 
     if (l > 0 && w > 0 && h > 0 && shipTarif > 0 && pWeight > 0 && planeTarif > 0) {
+      // Calcul Bateau: Volume (m³) = (L × l × h) / 1,000,000
       const volume = (l * w * h) / 1000000;
+      // Coût Bateau = Volume × Tarif CBM
       const shipCost = volume * shipTarif;
+      
+      // Calcul Avion: Coût = Poids × Tarif/kg
       const planeCost = pWeight * planeTarif;
 
-      const winner = shipCost < planeCost ? "ship" : "plane";
+      // Déterminer le gagnant (le moins cher)
+      const winner = shipCost <= planeCost ? "ship" : "plane";
+      
+      // Calculer la différence
       const difference = Math.abs(shipCost - planeCost);
+      
+      // Calculer le pourcentage d'économie par rapport au plus cher
       const maxCost = Math.max(shipCost, planeCost);
-      const percentage = (difference / maxCost) * 100;
+      const percentage = maxCost > 0 ? (difference / maxCost) * 100 : 0;
 
       setResult({
         shipCost,
@@ -71,12 +81,11 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
   };
 
   const resetForm = () => {
-    setShipCurrency("FCFA");
+    setCurrency("FCFA");
     setShipTarifCBM("");
     setLength("");
     setWidth("");
     setHeight("");
-    setPlaneCurrency("FCFA");
     setPlaneTarifKg("");
     setPlaneWeight("");
     setResult(null);
@@ -120,6 +129,17 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
           </h1>
         </div>
 
+        {/* Common Currency Selection */}
+        <div className="bg-card border border-border rounded-2xl p-4 mb-6 animate-fade-up">
+          <div className="flex items-center gap-3">
+            <DollarSign className="h-5 w-5 text-compare" />
+            <span className="font-medium text-foreground">Devise commune pour la comparaison :</span>
+            <div className="flex-1 max-w-xs">
+              <CurrencySelect value={currency} onChange={setCurrency} />
+            </div>
+          </div>
+        </div>
+
         {/* Two Column Form */}
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           {/* Ship Column */}
@@ -131,10 +151,8 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               <h2 className="font-display text-xl font-bold text-gradient-ship">BATEAU</h2>
             </div>
 
-            <CurrencySelect value={shipCurrency} onChange={setShipCurrency} />
-
             <div className="space-y-2">
-              <Label className="text-foreground text-sm">Tarif CBM (par m³)</Label>
+              <Label className="text-foreground text-sm">Tarif CBM (par m³) en {currency}</Label>
               <Input
                 type="number"
                 value={shipTarifCBM}
@@ -147,32 +165,53 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-foreground text-sm">
                 <Ruler className="h-4 w-4 text-muted-foreground" />
-                Dimensions (cm)
+                Dimensions du colis (cm)
               </Label>
               <div className="grid grid-cols-3 gap-2">
-                <Input
-                  type="number"
-                  value={length}
-                  onChange={(e) => setLength(e.target.value)}
-                  placeholder="L"
-                  className="bg-secondary border-border"
-                />
-                <Input
-                  type="number"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
-                  placeholder="l"
-                  className="bg-secondary border-border"
-                />
-                <Input
-                  type="number"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  placeholder="h"
-                  className="bg-secondary border-border"
-                />
+                <div>
+                  <Label className="text-xs text-muted-foreground mb-1 block">Longueur</Label>
+                  <Input
+                    type="number"
+                    value={length}
+                    onChange={(e) => setLength(e.target.value)}
+                    placeholder="150"
+                    className="bg-secondary border-border"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground mb-1 block">Largeur</Label>
+                  <Input
+                    type="number"
+                    value={width}
+                    onChange={(e) => setWidth(e.target.value)}
+                    placeholder="55"
+                    className="bg-secondary border-border"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground mb-1 block">Hauteur</Label>
+                  <Input
+                    type="number"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                    placeholder="63.5"
+                    className="bg-secondary border-border"
+                  />
+                </div>
               </div>
             </div>
+
+            {/* Ship intermediate result */}
+            {isShipValid && (
+              <div className="mt-4 p-3 bg-secondary/50 rounded-lg border border-ship/30">
+                <p className="text-sm text-muted-foreground">
+                  Volume: <span className="font-semibold text-foreground">{formatNumber((parseFloat(length) * parseFloat(width) * parseFloat(height)) / 1000000, 4)} m³</span>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Coût estimé: <span className="font-semibold text-ship">{formatNumber(((parseFloat(length) * parseFloat(width) * parseFloat(height)) / 1000000) * parseFloat(shipTarifCBM))} {currency}</span>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Plane Column */}
@@ -184,10 +223,8 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               <h2 className="font-display text-xl font-bold text-gradient-plane">AVION</h2>
             </div>
 
-            <CurrencySelect value={planeCurrency} onChange={setPlaneCurrency} />
-
             <div className="space-y-2">
-              <Label className="text-foreground text-sm">Tarif par kilogramme</Label>
+              <Label className="text-foreground text-sm">Tarif par kilogramme en {currency}</Label>
               <Input
                 type="number"
                 value={planeTarifKg}
@@ -210,6 +247,18 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
                 className="bg-secondary border-border"
               />
             </div>
+
+            {/* Plane intermediate result */}
+            {isPlaneValid && (
+              <div className="mt-4 p-3 bg-secondary/50 rounded-lg border border-plane/30">
+                <p className="text-sm text-muted-foreground">
+                  Poids: <span className="font-semibold text-foreground">{formatNumber(parseFloat(planeWeight))} kg</span>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Coût estimé: <span className="font-semibold text-plane">{formatNumber(parseFloat(planeWeight) * parseFloat(planeTarifKg))} {currency}</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -251,63 +300,99 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               <h3 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
                 {result.winner === "ship" ? "Le BATEAU" : "L'AVION"} est moins cher
               </h3>
-              <p className="text-primary-foreground/90 text-4xl md:text-5xl font-display font-bold mb-2">
-                {formatNumber(result.difference)} {result.winner === "ship" ? shipCurrency : planeCurrency}
+              <p className="text-primary-foreground/90 text-lg mb-1">
+                Économie de
+              </p>
+              <p className="text-primary-foreground text-4xl md:text-5xl font-display font-bold mb-2">
+                {formatNumber(result.difference)} {currency}
               </p>
               <div className="flex items-center justify-center gap-2 text-primary-foreground/80">
                 <TrendingDown className="h-5 w-5" />
-                <span className="text-lg">Vous économisez {formatNumber(result.percentage, 1)}%</span>
+                <span className="text-lg">Soit {formatNumber(result.percentage, 1)}% de moins</span>
               </div>
             </div>
 
             {/* Comparison Cards */}
             <div className="grid md:grid-cols-2 gap-4">
               <div className={cn(
-                "bg-card border rounded-xl p-4",
+                "bg-card border-2 rounded-xl p-5",
                 result.winner === "ship" ? "border-ship glow-ship" : "border-border"
               )}>
                 <div className="flex items-center gap-2 mb-3">
                   <Ship className="h-5 w-5 text-ship" />
-                  <span className="font-semibold text-foreground">Bateau</span>
+                  <span className="font-semibold text-foreground">Bateau (CBM)</span>
                   {result.winner === "ship" && (
-                    <span className="ml-auto text-xs gradient-ship text-primary-foreground px-2 py-1 rounded-full">
-                      Moins cher
+                    <span className="ml-auto text-xs gradient-ship text-primary-foreground px-2 py-1 rounded-full font-medium">
+                      ✓ Moins cher
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">
-                  Volume: {formatNumber(result.shipVolume, 4)} m³
-                </p>
-                <p className={cn(
-                  "font-display text-xl font-bold",
-                  result.winner === "ship" ? "text-gradient-ship" : "text-foreground"
-                )}>
-                  {formatNumber(result.shipCost)} {shipCurrency}
-                </p>
+                <div className="space-y-1 mb-3">
+                  <p className="text-sm text-muted-foreground">
+                    Tarif CBM: <span className="text-foreground">{formatNumber(parseFloat(shipTarifCBM))} {currency}/m³</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Volume: <span className="text-foreground">{formatNumber(result.shipVolume, 4)} m³</span>
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-border">
+                  <p className="text-sm text-muted-foreground mb-1">Coût total</p>
+                  <p className={cn(
+                    "font-display text-2xl font-bold",
+                    result.winner === "ship" ? "text-gradient-ship" : "text-foreground"
+                  )}>
+                    {formatNumber(result.shipCost)} {currency}
+                  </p>
+                </div>
               </div>
 
               <div className={cn(
-                "bg-card border rounded-xl p-4",
+                "bg-card border-2 rounded-xl p-5",
                 result.winner === "plane" ? "border-plane glow-plane" : "border-border"
               )}>
                 <div className="flex items-center gap-2 mb-3">
                   <Plane className="h-5 w-5 text-plane" />
-                  <span className="font-semibold text-foreground">Avion</span>
+                  <span className="font-semibold text-foreground">Avion (Poids)</span>
                   {result.winner === "plane" && (
-                    <span className="ml-auto text-xs gradient-plane text-primary-foreground px-2 py-1 rounded-full">
-                      Moins cher
+                    <span className="ml-auto text-xs gradient-plane text-primary-foreground px-2 py-1 rounded-full font-medium">
+                      ✓ Moins cher
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">
-                  Poids: {formatNumber(result.planeWeight)} kg
-                </p>
-                <p className={cn(
-                  "font-display text-xl font-bold",
-                  result.winner === "plane" ? "text-gradient-plane" : "text-foreground"
-                )}>
-                  {formatNumber(result.planeCost)} {planeCurrency}
-                </p>
+                <div className="space-y-1 mb-3">
+                  <p className="text-sm text-muted-foreground">
+                    Tarif/kg: <span className="text-foreground">{formatNumber(parseFloat(planeTarifKg))} {currency}/kg</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Poids: <span className="text-foreground">{formatNumber(result.planeWeight)} kg</span>
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-border">
+                  <p className="text-sm text-muted-foreground mb-1">Coût total</p>
+                  <p className={cn(
+                    "font-display text-2xl font-bold",
+                    result.winner === "plane" ? "text-gradient-plane" : "text-foreground"
+                  )}>
+                    {formatNumber(result.planeCost)} {currency}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Calculation Details */}
+            <div className="bg-card border border-border rounded-xl p-4 text-sm text-muted-foreground">
+              <p className="font-medium text-foreground mb-2">Détail des calculs :</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p>🚢 <strong>Bateau:</strong></p>
+                  <p className="ml-4">Volume = ({length} × {width} × {height}) / 1 000 000 = {formatNumber(result.shipVolume, 4)} m³</p>
+                  <p className="ml-4">Coût = {formatNumber(result.shipVolume, 4)} × {formatNumber(parseFloat(shipTarifCBM))} = <strong>{formatNumber(result.shipCost)} {currency}</strong></p>
+                </div>
+                <div>
+                  <p>✈️ <strong>Avion:</strong></p>
+                  <p className="ml-4">Poids = {formatNumber(result.planeWeight)} kg</p>
+                  <p className="ml-4">Coût = {formatNumber(result.planeWeight)} × {formatNumber(parseFloat(planeTarifKg))} = <strong>{formatNumber(result.planeCost)} {currency}</strong></p>
+                </div>
               </div>
             </div>
           </div>
