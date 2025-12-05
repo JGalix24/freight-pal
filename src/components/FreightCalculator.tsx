@@ -3,15 +3,15 @@ import { HomePage } from "./HomePage";
 import { ShipCalculator } from "./ShipCalculator";
 import { PlaneCalculator } from "./PlaneCalculator";
 import { CompareCalculator } from "./CompareCalculator";
+import { MultiPackageCalculator } from "./MultiPackageCalculator";
 
-type Mode = "home" | "ship" | "plane" | "compare";
+type Mode = "home" | "ship" | "plane" | "compare" | "multi";
 
 export const FreightCalculator = () => {
   const [mode, setMode] = useState<Mode>("home");
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    // Set dark mode by default
     if (isDark) {
       document.documentElement.classList.add("dark");
     } else {
@@ -42,6 +42,14 @@ export const FreightCalculator = () => {
     case "compare":
       return (
         <CompareCalculator
+          onBack={goHome}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
+        />
+      );
+    case "multi":
+      return (
+        <MultiPackageCalculator
           onBack={goHome}
           isDark={isDark}
           onToggleTheme={toggleTheme}
