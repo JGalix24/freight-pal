@@ -1,9 +1,9 @@
-import { Ship, Plane, Scale } from "lucide-react";
+import { Ship, Plane, Scale, Boxes } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
 
-type Mode = "home" | "ship" | "plane" | "compare";
+type Mode = "home" | "ship" | "plane" | "compare" | "multi";
 
 interface HomePageProps {
   onSelectMode: (mode: Mode) => void;
@@ -34,12 +34,12 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
           </p>
         </div>
 
-        <div className="w-full max-w-4xl animate-fade-up" style={{ animationDelay: "0.2s" }}>
+        <div className="w-full max-w-5xl animate-fade-up" style={{ animationDelay: "0.2s" }}>
           <h2 className="font-display text-xl md:text-2xl font-semibold text-foreground text-center mb-8">
             QUE VOULEZ-VOUS CALCULER ?
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <ModeCard
               icon={Ship}
               title="BATEAU"
@@ -60,6 +60,13 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
               description="Bateau vs Avion"
               variant="compare"
               onClick={() => onSelectMode("compare")}
+            />
+            <ModeCard
+              icon={Boxes}
+              title="MULTI-COLIS"
+              description="Plusieurs colis"
+              variant="multi"
+              onClick={() => onSelectMode("multi")}
             />
           </div>
         </div>

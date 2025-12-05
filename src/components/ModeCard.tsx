@@ -5,7 +5,7 @@ interface ModeCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  variant: "ship" | "plane" | "compare";
+  variant: "ship" | "plane" | "compare" | "multi";
   onClick: () => void;
 }
 
@@ -14,16 +14,25 @@ const variantStyles = {
     gradient: "gradient-ship",
     glow: "glow-ship",
     text: "text-gradient-ship",
+    ring: "focus:ring-ship",
   },
   plane: {
     gradient: "gradient-plane",
     glow: "glow-plane",
     text: "text-gradient-plane",
+    ring: "focus:ring-plane",
   },
   compare: {
     gradient: "gradient-compare",
     glow: "glow-compare",
     text: "text-gradient-compare",
+    ring: "focus:ring-compare",
+  },
+  multi: {
+    gradient: "bg-gradient-to-br from-amber-500 to-orange-600",
+    glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.3)]",
+    text: "bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent",
+    ring: "focus:ring-amber-500",
   },
 };
 
@@ -37,16 +46,10 @@ export const ModeCard = ({ icon: Icon, title, description, variant, onClick }: M
         "group relative w-full p-6 rounded-2xl bg-card border border-border",
         "transition-all duration-300 hover:scale-105 hover:-translate-y-2",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background",
-        variant === "ship" && "focus:ring-ship",
-        variant === "plane" && "focus:ring-plane",
-        variant === "compare" && "focus:ring-compare"
+        styles.ring,
+        styles.glow
       )}
     >
-      <div className={cn(
-        "absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-        styles.glow
-      )} />
-      
       <div className="relative flex flex-col items-center gap-4">
         <div className={cn(
           "p-4 rounded-xl transition-all duration-300 group-hover:scale-110",
