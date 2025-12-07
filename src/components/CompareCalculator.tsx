@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight, DollarSign } from "lucide-react";
+import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight, DollarSign, FileDown, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
+import { useHistory } from "@/hooks/useHistory";
+import { exportToPdf } from "@/lib/exportPdf";
+import { getTransitLabel, getTransitDifference } from "@/lib/transitTime";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 interface CompareCalculatorProps {
@@ -40,6 +44,8 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
 
   const [result, setResult] = useState<CompareResult | null>(null);
   const [showModal, setShowModal] = useState(false);
+  
+  const { saveToHistory } = useHistory();
 
   const calculateComparison = () => {
     const l = parseFloat(length);
@@ -50,21 +56,11 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
     const planeTarif = parseFloat(planeTarifKg);
 
     if (l > 0 && w > 0 && h > 0 && shipTarif > 0 && pWeight > 0 && planeTarif > 0) {
-      // Calcul Bateau: Volume (m³) = (L × l × h) / 1,000,000
       const volume = (l * w * h) / 1000000;
-      // Coût Bateau = Volume × Tarif CBM
       const shipCost = volume * shipTarif;
-      
-      // Calcul Avion: Coût = Poids × Tarif/kg
       const planeCost = pWeight * planeTarif;
-
-      // Déterminer le gagnant (le moins cher)
       const winner = shipCost <= planeCost ? "ship" : "plane";
-      
-      // Calculer la différence
       const difference = Math.abs(shipCost - planeCost);
-      
-      // Calculer le pourcentage d'économie par rapport au plus cher
       const maxCost = Math.max(shipCost, planeCost);
       const percentage = maxCost > 0 ? (difference / maxCost) * 100 : 0;
 
@@ -77,7 +73,53 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
         difference,
         percentage,
       });
+      
+      // Save to history
+      saveToHistory({
+        type: "compare",
+        currency,
+        data: {
+          shipTariff: shipTarif,
+          length: l,
+          width: w,
+          height: h,
+          planeTariff: planeTarif,
+          weight: pWeight,
+        },
+        result: {
+          shipCost: formatNumber(shipCost),
+          planeCost: formatNumber(planeCost),
+          winner,
+          savings: formatNumber(percentage, 1),
+        },
+      });
     }
+  };
+
+  const handleExportPdf = () => {
+    if (!result) return;
+    
+    exportToPdf({
+      title: "Comparaison Bateau vs Avion",
+      type: "compare",
+      currency,
+      date: new Date().toLocaleString("fr-FR"),
+      inputs: [
+        { label: "Bateau - Tarif CBM", value: `${shipTarifCBM} ${currency}` },
+        { label: "Bateau - Dimensions", value: `${length} × ${width} × ${height} cm` },
+        { label: "Avion - Tarif/kg", value: `${planeTarifKg} ${currency}` },
+        { label: "Avion - Poids", value: `${planeWeight} kg` },
+      ],
+      results: [
+        { label: "Coût Bateau", value: `${formatNumber(result.shipCost)} ${currency}` },
+        { label: "Coût Avion", value: `${formatNumber(result.planeCost)} ${currency}` },
+        { label: "Gagnant", value: result.winner === "ship" ? "Bateau" : "Avion" },
+        { label: "Économie", value: `${formatNumber(result.percentage, 1)}%` },
+      ],
+      transitTime: `Bateau: ${getTransitLabel("ship")} | Avion: ${getTransitLabel("plane")}`,
+    });
+    
+    toast.success("PDF exporté !");
   };
 
   const resetForm = () => {
@@ -144,11 +186,17 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           {/* Ship Column */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="gradient-ship p-2 rounded-lg">
-                <Ship className="h-5 w-5 text-primary-foreground" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="gradient-ship p-2 rounded-lg">
+                  <Ship className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <h2 className="font-display text-xl font-bold text-gradient-ship">BATEAU</h2>
               </div>
-              <h2 className="font-display text-xl font-bold text-gradient-ship">BATEAU</h2>
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {getTransitLabel("ship")}
+              </span>
             </div>
 
             <div className="space-y-2">
@@ -201,7 +249,6 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               </div>
             </div>
 
-            {/* Ship intermediate result */}
             {isShipValid && (
               <div className="mt-4 p-3 bg-secondary/50 rounded-lg border border-ship/30">
                 <p className="text-sm text-muted-foreground">
@@ -216,11 +263,17 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
 
           {/* Plane Column */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="gradient-plane p-2 rounded-lg">
-                <Plane className="h-5 w-5 text-primary-foreground" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="gradient-plane p-2 rounded-lg">
+                  <Plane className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <h2 className="font-display text-xl font-bold text-gradient-plane">AVION</h2>
               </div>
-              <h2 className="font-display text-xl font-bold text-gradient-plane">AVION</h2>
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {getTransitLabel("plane")}
+              </span>
             </div>
 
             <div className="space-y-2">
@@ -248,7 +301,6 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               />
             </div>
 
-            {/* Plane intermediate result */}
             {isPlaneValid && (
               <div className="mt-4 p-3 bg-secondary/50 rounded-lg border border-plane/30">
                 <p className="text-sm text-muted-foreground">
@@ -285,6 +337,19 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
         {/* Result */}
         {result && (
           <div className="mt-8 space-y-6 animate-fade-up">
+            {/* Export button */}
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportPdf}
+                className="gap-2"
+              >
+                <FileDown className="h-4 w-4" />
+                Exporter en PDF
+              </Button>
+            </div>
+
             {/* Winner Card */}
             <div className={cn(
               "rounded-2xl p-8 text-center",
@@ -310,6 +375,12 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
                 <TrendingDown className="h-5 w-5" />
                 <span className="text-lg">Soit {formatNumber(result.percentage, 1)}% de moins</span>
               </div>
+              {result.winner === "plane" && (
+                <p className="mt-3 text-primary-foreground/70 text-sm flex items-center justify-center gap-1">
+                  <Clock className="h-4 w-4" />
+                  Et {getTransitDifference()} par avion !
+                </p>
+              )}
             </div>
 
             {/* Comparison Cards */}
@@ -333,6 +404,10 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Volume: <span className="text-foreground">{formatNumber(result.shipVolume, 4)} m³</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Délai: <span className="text-foreground">{getTransitLabel("ship")}</span>
                   </p>
                 </div>
                 <div className="pt-3 border-t border-border">
@@ -365,6 +440,10 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
                   </p>
                   <p className="text-sm text-muted-foreground">
                     Poids: <span className="text-foreground">{formatNumber(result.planeWeight)} kg</span>
+                  </p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    Délai: <span className="text-foreground">{getTransitLabel("plane")}</span>
                   </p>
                 </div>
                 <div className="pt-3 border-t border-border">

@@ -4,8 +4,10 @@ import { ShipCalculator } from "./ShipCalculator";
 import { PlaneCalculator } from "./PlaneCalculator";
 import { CompareCalculator } from "./CompareCalculator";
 import { MultiPackageCalculator } from "./MultiPackageCalculator";
+import { SettingsPage } from "./SettingsPage";
+import { HistoryPage } from "./HistoryPage";
 
-type Mode = "home" | "ship" | "plane" | "compare" | "multi";
+type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
 
 export const FreightCalculator = () => {
   const [mode, setMode] = useState<Mode>("home");
@@ -50,6 +52,22 @@ export const FreightCalculator = () => {
     case "multi":
       return (
         <MultiPackageCalculator
+          onBack={goHome}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
+        />
+      );
+    case "settings":
+      return (
+        <SettingsPage
+          onBack={goHome}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
+        />
+      );
+    case "history":
+      return (
+        <HistoryPage
           onBack={goHome}
           isDark={isDark}
           onToggleTheme={toggleTheme}

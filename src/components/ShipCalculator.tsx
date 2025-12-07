@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { ArrowLeft, Ship, Calculator, RotateCcw, Ruler, Package } from "lucide-react";
+import { ArrowLeft, Ship, Calculator, RotateCcw, Ruler, Package, FileDown, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
-import { cn } from "@/lib/utils";
+import { useHistory } from "@/hooks/useHistory";
+import { exportToPdf } from "@/lib/exportPdf";
+import { getTransitLabel } from "@/lib/transitTime";
+import { toast } from "sonner";
 
 interface ShipCalculatorProps {
   onBack: () => void;
@@ -22,6 +25,8 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
   const [height, setHeight] = useState("");
   const [result, setResult] = useState<{ volume: number; cost: number } | null>(null);
   const [showModal, setShowModal] = useState(false);
+  
+  const { saveToHistory } = useHistory();
 
   const calculateCost = () => {
     const l = parseFloat(length);
@@ -33,7 +38,37 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
       const volume = (l * w * h) / 1000000;
       const cost = volume * tarif;
       setResult({ volume, cost });
+      
+      // Save to history
+      saveToHistory({
+        type: "ship",
+        currency,
+        data: { tariff: tarif, length: l, width: w, height: h },
+        result: { volume: formatNumber(volume, 4), cost: formatNumber(cost) },
+      });
     }
+  };
+
+  const handleExportPdf = () => {
+    if (!result) return;
+    
+    exportToPdf({
+      title: "Calcul Bateau (CBM)",
+      type: "ship",
+      currency,
+      date: new Date().toLocaleString("fr-FR"),
+      inputs: [
+        { label: "Tarif CBM", value: `${tarifCBM} ${currency}` },
+        { label: "Dimensions", value: `${length} × ${width} × ${height} cm` },
+      ],
+      results: [
+        { label: "Volume", value: `${formatNumber(result.volume, 4)} m³` },
+        { label: "Coût total", value: `${formatNumber(result.cost)} ${currency}` },
+      ],
+      transitTime: getTransitLabel("ship"),
+    });
+    
+    toast.success("PDF exporté !");
   };
 
   const resetForm = () => {
@@ -162,9 +197,20 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         {/* Result */}
         {result && (
           <div className="mt-6 bg-card border border-border rounded-2xl p-6 animate-fade-up glow-ship">
-            <h2 className="font-display text-xl font-bold text-foreground mb-4 text-center">
-              Résultat
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl font-bold text-foreground">
+                Résultat
+              </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportPdf}
+                className="gap-2"
+              >
+                <FileDown className="h-4 w-4" />
+                PDF
+              </Button>
+            </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground">Volume du colis</span>
@@ -172,10 +218,19 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
                   {formatNumber(result.volume, 4)} m³
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2">
+              <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground">Coût total</span>
                 <span className="font-display text-2xl font-bold text-gradient-ship">
                   {formatNumber(result.cost)} {currency}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Délai estimé
+                </span>
+                <span className="font-semibold text-ship">
+                  {getTransitLabel("ship")}
                 </span>
               </div>
             </div>

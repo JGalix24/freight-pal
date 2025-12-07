@@ -1,9 +1,9 @@
-import { Ship, Plane, Scale, Boxes } from "lucide-react";
+import { Ship, Plane, Scale, Boxes, Settings, Clock } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
 
-type Mode = "home" | "ship" | "plane" | "compare" | "multi";
+type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
 
 interface HomePageProps {
   onSelectMode: (mode: Mode) => void;
@@ -17,7 +17,23 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
       {/* Header */}
       <header className="p-4 md:p-6 flex items-center justify-between">
         <Logo />
-        <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onSelectMode("history")}
+            className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+            title="Historique"
+          >
+            <Clock className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => onSelectMode("settings")}
+            className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+            title="Paramètres"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
+          <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+        </div>
       </header>
 
       {/* Main Content */}
