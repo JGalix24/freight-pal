@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { ArrowLeft, Plane, Calculator, RotateCcw, Weight } from "lucide-react";
+import { ArrowLeft, Plane, Calculator, RotateCcw, Weight, FileDown, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
+import { useHistory } from "@/hooks/useHistory";
+import { exportToPdf } from "@/lib/exportPdf";
+import { getTransitLabel } from "@/lib/transitTime";
+import { toast } from "sonner";
 
 interface PlaneCalculatorProps {
   onBack: () => void;
@@ -19,6 +23,8 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
   const [weight, setWeight] = useState("");
   const [result, setResult] = useState<{ weight: number; cost: number } | null>(null);
   const [showModal, setShowModal] = useState(false);
+  
+  const { saveToHistory } = useHistory();
 
   const calculateCost = () => {
     const w = parseFloat(weight);
@@ -27,7 +33,36 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
     if (w > 0 && tarif > 0) {
       const cost = w * tarif;
       setResult({ weight: w, cost });
+      
+      // Save to history
+      saveToHistory({
+        type: "plane",
+        currency,
+        data: { tariff: tarif, weight: w },
+        result: { cost: formatNumber(cost) },
+      });
     }
+  };
+
+  const handleExportPdf = () => {
+    if (!result) return;
+    
+    exportToPdf({
+      title: "Calcul Avion (Poids)",
+      type: "plane",
+      currency,
+      date: new Date().toLocaleString("fr-FR"),
+      inputs: [
+        { label: "Tarif/kg", value: `${tarifKg} ${currency}` },
+        { label: "Poids", value: `${weight} kg` },
+      ],
+      results: [
+        { label: "Coût total", value: `${formatNumber(result.cost)} ${currency}` },
+      ],
+      transitTime: getTransitLabel("plane"),
+    });
+    
+    toast.success("PDF exporté !");
   };
 
   const resetForm = () => {
@@ -129,9 +164,20 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
         {/* Result */}
         {result && (
           <div className="mt-6 bg-card border border-border rounded-2xl p-6 animate-fade-up glow-plane">
-            <h2 className="font-display text-xl font-bold text-foreground mb-4 text-center">
-              Résultat
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl font-bold text-foreground">
+                Résultat
+              </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleExportPdf}
+                className="gap-2"
+              >
+                <FileDown className="h-4 w-4" />
+                PDF
+              </Button>
+            </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground">Poids du colis</span>
@@ -139,10 +185,19 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
                   {formatNumber(result.weight)} kg
                 </span>
               </div>
-              <div className="flex justify-between items-center py-2">
+              <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground">Coût total</span>
                 <span className="font-display text-2xl font-bold text-gradient-plane">
                   {formatNumber(result.cost)} {currency}
+                </span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-muted-foreground flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Délai estimé
+                </span>
+                <span className="font-semibold text-plane">
+                  {getTransitLabel("plane")}
                 </span>
               </div>
             </div>

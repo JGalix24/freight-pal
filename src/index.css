@@ -49,10 +49,15 @@
     --compare-secondary: 161 94% 30%;
     --compare-glow: 160 84% 50%;
 
+    --multi-primary: 25 95% 53%;
+    --multi-secondary: 21 90% 48%;
+    --multi-glow: 25 95% 65%;
+
     /* Gradients */
     --gradient-ship: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(221 83% 40%) 100%);
     --gradient-plane: linear-gradient(135deg, hsl(271 91% 65%) 0%, hsl(263 70% 50%) 100%);
     --gradient-compare: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(161 94% 30%) 100%);
+    --gradient-multi: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(21 90% 48%) 100%);
     --gradient-background: linear-gradient(135deg, hsl(220 60% 97%) 0%, hsl(0 0% 100%) 50%, hsl(270 60% 97%) 100%);
   }
 
@@ -115,6 +120,10 @@
   
   .gradient-compare {
     background: var(--gradient-compare);
+  }
+
+  .gradient-multi {
+    background: var(--gradient-multi);
   }
 
   .gradient-background {
