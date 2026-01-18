@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useHistory } from "@/hooks/useHistory";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel, getTransitDifference } from "@/lib/transitTime";
@@ -158,7 +159,10 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             <ArrowLeft className="h-5 w-5" />
             Retour
           </Button>
-          <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+          </div>
         </div>
 
         {/* Title */}
