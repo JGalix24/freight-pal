@@ -2,6 +2,7 @@ import { Ship, Plane, Scale, Boxes, Settings, Clock } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/hooks/useLanguage";
 
 type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
@@ -20,7 +21,8 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
       {/* Header */}
       <header className="p-4 md:p-6 flex items-center justify-between">
         <Logo />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:gap-3">
+          <LanguageSwitcher />
           <button
             onClick={() => onSelectMode("history")}
             className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
