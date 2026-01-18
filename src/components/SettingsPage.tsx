@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, RefreshCw, Save, Settings, DollarSign } from "lucide-react";
+import { ArrowLeft, Settings, DollarSign, RefreshCw, Globe, Moon, Sun } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { Logo } from "./Logo";
 import { useCurrency, ExchangeRates } from "@/hooks/useCurrency";
+import { useLanguage, LANGUAGES, Language } from "@/hooks/useLanguage";
 import { toast } from "sonner";
 
 interface SettingsPageProps {
@@ -10,65 +12,136 @@ interface SettingsPageProps {
   onToggleTheme: () => void;
 }
 
-const CURRENCIES = ["EUR", "USD", "GBP", "CAD", "FCFA"];
+const CURRENCIES = ["EUR", "USD", "GBP", "CAD", "FCFA", "ZAR", "TND", "MAD", "GHS", "KES"];
+
+const CURRENCY_LABELS: Record<string, string> = {
+  EUR: "Euro (€)",
+  USD: "Dollar US ($)",
+  GBP: "Livre sterling (£)",
+  CAD: "Dollar canadien ($)",
+  FCFA: "Franc CFA",
+  ZAR: "Rand sud-africain (R)",
+  TND: "Dinar tunisien",
+  MAD: "Dirham marocain",
+  GHS: "Cedi ghanéen (₵)",
+  KES: "Shilling kényan (KSh)",
+};
 
 export const SettingsPage = ({ onBack, isDark, onToggleTheme }: SettingsPageProps) => {
   const { rates, manualRates, useManual, lastUpdate, isLoading, fetchRates, saveManualRates } = useCurrency();
+  const { language, setLanguage, t, getDateLocale } = useLanguage();
   
   const [localManualRates, setLocalManualRates] = useState<ExchangeRates>({});
   const [localUseManual, setLocalUseManual] = useState(false);
 
   useEffect(() => {
-    if (Object.keys(manualRates).length > 0) {
-      setLocalManualRates(manualRates);
-    } else {
-      setLocalManualRates({ ...rates });
-    }
+    setLocalManualRates(Object.keys(manualRates).length > 0 ? manualRates : rates);
     setLocalUseManual(useManual);
   }, [rates, manualRates, useManual]);
 
   const handleFetchRates = async () => {
     const success = await fetchRates();
     if (success) {
-      toast.success("Taux de change mis à jour !");
-      setLocalManualRates({ ...rates });
+      toast.success(t.ratesUpdated);
     } else {
-      toast.error("Erreur lors de la récupération des taux");
+      toast.error(t.errorFetchingRates);
     }
   };
 
-  const handleSave = () => {
+  const handleSaveManualRates = () => {
     saveManualRates(localManualRates, localUseManual);
-    toast.success("Paramètres sauvegardés !");
+    toast.success(t.ratesSaved);
   };
 
   const handleRateChange = (currency: string, value: string) => {
-    const numValue = parseFloat(value) || 0;
-    setLocalManualRates((prev) => ({ ...prev, [currency]: numValue }));
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && numValue > 0) {
+      setLocalManualRates(prev => ({
+        ...prev,
+        [currency]: numValue,
+      }));
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Retour</span>
-          </button>
-          <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
-        </div>
+    <div className="min-h-screen gradient-background">
+      {/* Header */}
+      <header className="p-4 md:p-6 flex items-center justify-between">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="hidden sm:inline">{t.back}</span>
+        </button>
+        <Logo />
+        <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+      </header>
 
-        {/* Title */}
+      <main className="container max-w-2xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
             <Settings className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Paramètres</h1>
-          <p className="text-muted-foreground">Configurez les taux de change</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">{t.settings}</h1>
+        </div>
+
+        {/* Language Card */}
+        <div className="bg-card rounded-2xl border border-border p-6 shadow-lg mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Globe className="w-5 h-5 text-primary" />
+            <h2 className="text-xl font-semibold text-foreground">{t.language}</h2>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-3">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.value}
+                onClick={() => setLanguage(lang.value)}
+                className={`flex items-center justify-center gap-2 p-4 rounded-xl border transition-all ${
+                  language === lang.value
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-secondary hover:bg-muted"
+                }`}
+              >
+                <span className="text-xl">{lang.flag}</span>
+                <span className="font-medium">{lang.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Theme Card */}
+        <div className="bg-card rounded-2xl border border-border p-6 shadow-lg mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            {isDark ? <Moon className="w-5 h-5 text-primary" /> : <Sun className="w-5 h-5 text-primary" />}
+            <h2 className="text-xl font-semibold text-foreground">{t.theme}</h2>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => isDark && onToggleTheme()}
+              className={`flex items-center justify-center gap-2 p-4 rounded-xl border transition-all ${
+                !isDark
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-secondary hover:bg-muted"
+              }`}
+            >
+              <Sun className="w-5 h-5" />
+              <span className="font-medium">{t.lightMode}</span>
+            </button>
+            <button
+              onClick={() => !isDark && onToggleTheme()}
+              className={`flex items-center justify-center gap-2 p-4 rounded-xl border transition-all ${
+                isDark
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border bg-secondary hover:bg-muted"
+              }`}
+            >
+              <Moon className="w-5 h-5" />
+              <span className="font-medium">{t.darkMode}</span>
+            </button>
+          </div>
         </div>
 
         {/* Exchange Rates Card */}
@@ -76,7 +149,7 @@ export const SettingsPage = ({ onBack, isDark, onToggleTheme }: SettingsPageProp
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <DollarSign className="w-5 h-5 text-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Taux de change</h2>
+              <h2 className="text-xl font-semibold text-foreground">{t.exchangeRates}</h2>
             </div>
             <button
               onClick={handleFetchRates}
@@ -84,13 +157,13 @@ export const SettingsPage = ({ onBack, isDark, onToggleTheme }: SettingsPageProp
               className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">Actualiser</span>
+              <span className="hidden sm:inline">{t.refresh}</span>
             </button>
           </div>
 
           {lastUpdate && (
             <p className="text-sm text-muted-foreground mb-4">
-              Dernière mise à jour: {new Date(lastUpdate).toLocaleString("fr-FR")}
+              {t.lastUpdate}: {new Date(lastUpdate).toLocaleString(getDateLocale())}
             </p>
           )}
 
@@ -104,48 +177,52 @@ export const SettingsPage = ({ onBack, isDark, onToggleTheme }: SettingsPageProp
               className="w-5 h-5 rounded border-border text-primary focus:ring-primary"
             />
             <label htmlFor="useManual" className="text-foreground">
-              Utiliser les taux manuels
+              {t.useManualRates}
             </label>
           </div>
 
           {/* Rates table */}
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Base: 1 EUR = X devise (FCFA est fixé à 655.957)
+              {t.baseCurrency} (FCFA = 655.957)
             </p>
-            
-            {CURRENCIES.map((currency) => (
-              <div key={currency} className="flex items-center gap-4">
-                <span className="w-16 font-medium text-foreground">{currency}</span>
-                <div className="flex-1 flex items-center gap-2">
-                  <span className="text-muted-foreground">API:</span>
-                  <span className="text-foreground">{rates[currency]?.toFixed(4) || "N/A"}</span>
+
+            <div className="grid gap-3">
+              {CURRENCIES.filter(c => c !== "EUR").map((currency) => (
+                <div key={currency} className="flex items-center gap-4 p-3 bg-secondary rounded-lg">
+                  <div className="flex-1">
+                    <span className="font-semibold text-foreground">{currency}</span>
+                    <span className="text-sm text-muted-foreground ml-2">
+                      {CURRENCY_LABELS[currency]}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      API: {rates[currency]?.toFixed(4) || "N/A"}
+                    </span>
+                    <input
+                      type="number"
+                      step="0.0001"
+                      value={localManualRates[currency] || ""}
+                      onChange={(e) => handleRateChange(currency, e.target.value)}
+                      className="w-24 px-3 py-2 bg-background border border-border rounded-lg text-foreground text-right"
+                      disabled={!localUseManual}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Manuel:</span>
-                  <input
-                    type="number"
-                    step="0.0001"
-                    value={localManualRates[currency] || ""}
-                    onChange={(e) => handleRateChange(currency, e.target.value)}
-                    disabled={currency === "EUR"}
-                    className="w-28 px-3 py-2 bg-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary disabled:opacity-50"
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Save button */}
           <button
-            onClick={handleSave}
-            className="w-full mt-6 flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold transition-all hover:scale-[1.02]"
+            onClick={handleSaveManualRates}
+            className="w-full mt-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors"
           >
-            <Save className="w-5 h-5" />
-            Sauvegarder
+            {t.saveRates}
           </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

@@ -14,11 +14,16 @@ interface CurrencySelectProps {
 }
 
 const currencies = [
-  { value: "FCFA", label: "FCFA" },
+  { value: "FCFA", label: "FCFA (XOF/XAF)" },
   { value: "EUR", label: "EUR (€)" },
   { value: "USD", label: "USD ($)" },
   { value: "GBP", label: "GBP (£)" },
   { value: "CAD", label: "CAD ($)" },
+  { value: "ZAR", label: "ZAR (R) - Rand" },
+  { value: "TND", label: "TND - Dinar tunisien" },
+  { value: "MAD", label: "MAD - Dirham marocain" },
+  { value: "GHS", label: "GHS (₵) - Cedi" },
+  { value: "KES", label: "KES (KSh) - Shilling" },
 ];
 
 export const CurrencySelect = ({ value, onChange }: CurrencySelectProps) => {
