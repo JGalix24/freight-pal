@@ -14,6 +14,11 @@ const DEFAULT_RATES: ExchangeRates = {
   GBP: 0.86,
   CAD: 1.47,
   FCFA: 655.96,
+  ZAR: 20.5,
+  TND: 3.4,
+  MAD: 10.9,
+  GHS: 15.8,
+  KES: 165,
 };
 
 export const useCurrency = () => {
@@ -54,7 +59,7 @@ export const useCurrency = () => {
     try {
       // Frankfurter API - free, no key needed
       const response = await fetch(
-        `https://api.frankfurter.app/latest?from=${BASE_CURRENCY}&to=USD,GBP,CAD`
+        `https://api.frankfurter.app/latest?from=${BASE_CURRENCY}&to=USD,GBP,CAD,ZAR,TND,MAD`
       );
       
       if (!response.ok) throw new Error("Failed to fetch rates");
@@ -67,6 +72,11 @@ export const useCurrency = () => {
         GBP: data.rates.GBP,
         CAD: data.rates.CAD,
         FCFA: 655.957, // Fixed rate (CFA Franc is pegged to EUR)
+        ZAR: data.rates.ZAR || 20.5,
+        TND: data.rates.TND || 3.4,
+        MAD: data.rates.MAD || 10.9,
+        GHS: 15.8, // Not available in Frankfurter, use default
+        KES: 165, // Not available in Frankfurter, use default
       };
       
       setRates(newRates);
