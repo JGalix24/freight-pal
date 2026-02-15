@@ -96,6 +96,18 @@ export interface Translations {
   
   // Time
   days: string;
+  
+  // How it works
+  howItWorks: string;
+  howItWorksSubtitle: string;
+  step1Title: string;
+  step1Desc: string;
+  step2Title: string;
+  step2Desc: string;
+  step3Title: string;
+  step3Desc: string;
+  step4Title: string;
+  step4Desc: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -170,6 +182,16 @@ const translations: Record<Language, Translations> = {
     fillAllFields: "Veuillez remplir tous les champs",
     errorFetchingRates: "Erreur lors de la récupération des taux",
     days: "jours",
+    howItWorks: "Comment ça marche ?",
+    howItWorksSubtitle: "Suivez ces étapes simples pour calculer vos frais de transport",
+    step1Title: "Choisissez le mode",
+    step1Desc: "Sélectionnez Bateau, Avion, Comparaison ou Multi-colis selon votre besoin.",
+    step2Title: "Renseignez les infos",
+    step2Desc: "Entrez la devise, le tarif, les dimensions et le poids de votre colis.",
+    step3Title: "Obtenez le résultat",
+    step3Desc: "Le coût total, le volume et le délai estimé s'affichent instantanément.",
+    step4Title: "Exportez ou comparez",
+    step4Desc: "Téléchargez le résultat en PDF ou comparez les options bateau et avion.",
   },
   en: {
     home: "Home",
@@ -242,6 +264,16 @@ const translations: Record<Language, Translations> = {
     fillAllFields: "Please fill in all fields",
     errorFetchingRates: "Error fetching rates",
     days: "days",
+    howItWorks: "How does it work?",
+    howItWorksSubtitle: "Follow these simple steps to calculate your shipping costs",
+    step1Title: "Choose the mode",
+    step1Desc: "Select Ship, Plane, Compare or Multi-package depending on your needs.",
+    step2Title: "Enter the details",
+    step2Desc: "Enter the currency, rate, dimensions and weight of your package.",
+    step3Title: "Get the result",
+    step3Desc: "Total cost, volume and estimated transit time are displayed instantly.",
+    step4Title: "Export or compare",
+    step4Desc: "Download the result as PDF or compare ship and plane options.",
   },
   es: {
     home: "Inicio",
@@ -314,6 +346,16 @@ const translations: Record<Language, Translations> = {
     fillAllFields: "Por favor completa todos los campos",
     errorFetchingRates: "Error al obtener los tipos",
     days: "días",
+    howItWorks: "¿Cómo funciona?",
+    howItWorksSubtitle: "Sigue estos sencillos pasos para calcular tus costos de envío",
+    step1Title: "Elige el modo",
+    step1Desc: "Selecciona Barco, Avión, Comparar o Multi-paquete según tu necesidad.",
+    step2Title: "Ingresa los datos",
+    step2Desc: "Introduce la moneda, la tarifa, las dimensiones y el peso de tu paquete.",
+    step3Title: "Obtén el resultado",
+    step3Desc: "El costo total, el volumen y el tiempo de tránsito estimado se muestran al instante.",
+    step4Title: "Exporta o compara",
+    step4Desc: "Descarga el resultado en PDF o compara las opciones de barco y avión.",
   },
 };
 
