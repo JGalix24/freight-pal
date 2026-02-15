@@ -8,6 +8,7 @@ import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useHistory } from "@/hooks/useHistory";
+import { useLanguage } from "@/hooks/useLanguage";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel } from "@/lib/transitTime";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ interface ShipCalculatorProps {
 }
 
 export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculatorProps) => {
+  const { t } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
   const [tarifCBM, setTarifCBM] = useState("");
   const [length, setLength] = useState("");
@@ -40,7 +42,6 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
       const cost = volume * tarif;
       setResult({ volume, cost });
       
-      // Save to history
       saveToHistory({
         type: "ship",
         currency,
@@ -54,22 +55,22 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
     if (!result) return;
     
     exportToPdf({
-      title: "Calcul Bateau (CBM)",
+      title: t.shipCalc,
       type: "ship",
       currency,
       date: new Date().toLocaleString("fr-FR"),
       inputs: [
-        { label: "Tarif CBM", value: `${tarifCBM} ${currency}` },
-        { label: "Dimensions", value: `${length} × ${width} × ${height} cm` },
+        { label: t.cbmRate, value: `${tarifCBM} ${currency}` },
+        { label: t.dimensions, value: `${length} × ${width} × ${height} cm` },
       ],
       results: [
-        { label: "Volume", value: `${formatNumber(result.volume, 4)} m³` },
-        { label: "Coût total", value: `${formatNumber(result.cost)} ${currency}` },
+        { label: t.volume, value: `${formatNumber(result.volume, 4)} m³` },
+        { label: t.totalCost, value: `${formatNumber(result.cost)} ${currency}` },
       ],
-      transitTime: getTransitLabel("ship"),
+      transitTime: getTransitLabel("ship", t.days),
     });
     
-    toast.success("PDF exporté !");
+    toast.success(t.pdfExported);
   };
 
   const resetForm = () => {
@@ -94,15 +95,10 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
   return (
     <div className="min-h-screen gradient-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="gap-2 text-muted-foreground hover:text-foreground"
-          >
+          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-5 w-5" />
-            Retour
+            {t.back}
           </Button>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
@@ -110,149 +106,90 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
           </div>
         </div>
 
-        {/* Title */}
         <div className="flex items-center justify-center gap-3 mb-8 animate-fade-up">
           <div className="gradient-ship p-3 rounded-xl">
             <Ship className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="font-display text-3xl font-bold text-gradient-ship">
-            Calcul Bateau
-          </h1>
+          <h1 className="font-display text-3xl font-bold text-gradient-ship">{t.shipCalc}</h1>
         </div>
 
-        {/* Form */}
         <div className="bg-card border border-border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <CurrencySelect value={currency} onChange={setCurrency} />
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
               <Package className="h-4 w-4 text-muted-foreground" />
-              Tarif CBM (par m³)
+              {t.cbmRatePerm3}
             </Label>
-            <Input
-              type="number"
-              value={tarifCBM}
-              onChange={(e) => setTarifCBM(e.target.value)}
-              placeholder="Ex: 210000"
-              className="bg-secondary border-border"
-            />
+            <Input type="number" value={tarifCBM} onChange={(e) => setTarifCBM(e.target.value)} placeholder="Ex: 210000" className="bg-secondary border-border" />
           </div>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
               <Ruler className="h-4 w-4 text-muted-foreground" />
-              Dimensions du colis (en cm)
+              {t.dimensionsCmLabel}
             </Label>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">Longueur</Label>
-                <Input
-                  type="number"
-                  value={length}
-                  onChange={(e) => setLength(e.target.value)}
-                  placeholder="150"
-                  className="bg-secondary border-border"
-                />
+                <Label className="text-xs text-muted-foreground mb-1 block">{t.length}</Label>
+                <Input type="number" value={length} onChange={(e) => setLength(e.target.value)} placeholder="150" className="bg-secondary border-border" />
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">Largeur</Label>
-                <Input
-                  type="number"
-                  value={width}
-                  onChange={(e) => setWidth(e.target.value)}
-                  placeholder="55"
-                  className="bg-secondary border-border"
-                />
+                <Label className="text-xs text-muted-foreground mb-1 block">{t.width}</Label>
+                <Input type="number" value={width} onChange={(e) => setWidth(e.target.value)} placeholder="55" className="bg-secondary border-border" />
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground mb-1 block">Hauteur</Label>
-                <Input
-                  type="number"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                  placeholder="63.5"
-                  className="bg-secondary border-border"
-                />
+                <Label className="text-xs text-muted-foreground mb-1 block">{t.height}</Label>
+                <Input type="number" value={height} onChange={(e) => setHeight(e.target.value)} placeholder="63.5" className="bg-secondary border-border" />
               </div>
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-4">
-            <Button
-              onClick={calculateCost}
-              disabled={!isValid}
-              className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2"
-            >
+            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2">
               <Calculator className="h-5 w-5" />
-              Calculer
+              {t.calculate}
             </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setShowModal(true)}
-              className="gap-2"
-            >
+            <Button variant="secondary" onClick={() => setShowModal(true)} className="gap-2">
               <RotateCcw className="h-5 w-5" />
-              Refaire
+              {t.reset}
             </Button>
           </div>
         </div>
 
-        {/* Result */}
         {result && (
           <div className="mt-6 bg-card border border-border rounded-2xl p-6 animate-fade-up glow-ship">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-bold text-foreground">
-                Résultat
-              </h2>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExportPdf}
-                className="gap-2"
-              >
+              <h2 className="font-display text-xl font-bold text-foreground">{t.results}</h2>
+              <Button variant="outline" size="sm" onClick={handleExportPdf} className="gap-2">
                 <FileDown className="h-4 w-4" />
                 PDF
               </Button>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-muted-foreground">Volume du colis</span>
-                <span className="font-semibold text-foreground">
-                  {formatNumber(result.volume, 4)} m³
-                </span>
+                <span className="text-muted-foreground">{t.packageVolume}</span>
+                <span className="font-semibold text-foreground">{formatNumber(result.volume, 4)} m³</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-muted-foreground">Coût total</span>
-                <span className="font-display text-2xl font-bold text-gradient-ship">
-                  {formatNumber(result.cost)} {currency}
-                </span>
+                <span className="text-muted-foreground">{t.totalCost}</span>
+                <span className="font-display text-2xl font-bold text-gradient-ship">{formatNumber(result.cost)} {currency}</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Clock className="h-4 w-4" />
-                  Délai estimé
+                  {t.estimatedDelay}
                 </span>
-                <span className="font-semibold text-ship">
-                  {getTransitLabel("ship")}
-                </span>
+                <span className="font-semibold text-ship">{getTransitLabel("ship", t.days)}</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Footer */}
-        <p className="text-center text-muted-foreground text-sm mt-8">
-          By Mr.G
-        </p>
+        <p className="text-center text-muted-foreground text-sm mt-8">By Mr.G</p>
       </div>
 
-      <ConfirmModal
-        isOpen={showModal}
-        onConfirm={resetForm}
-        onCancel={() => setShowModal(false)}
-        variant="ship"
-      />
+      <ConfirmModal isOpen={showModal} onConfirm={resetForm} onCancel={() => setShowModal(false)} variant="ship" />
     </div>
   );
 };

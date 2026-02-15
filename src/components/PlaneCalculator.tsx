@@ -8,6 +8,7 @@ import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useHistory } from "@/hooks/useHistory";
+import { useLanguage } from "@/hooks/useLanguage";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel } from "@/lib/transitTime";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ interface PlaneCalculatorProps {
 }
 
 export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculatorProps) => {
+  const { t } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
   const [tarifKg, setTarifKg] = useState("");
   const [weight, setWeight] = useState("");
@@ -35,7 +37,6 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
       const cost = w * tarif;
       setResult({ weight: w, cost });
       
-      // Save to history
       saveToHistory({
         type: "plane",
         currency,
@@ -49,21 +50,21 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
     if (!result) return;
     
     exportToPdf({
-      title: "Calcul Avion (Poids)",
+      title: t.planeCalc,
       type: "plane",
       currency,
       date: new Date().toLocaleString("fr-FR"),
       inputs: [
-        { label: "Tarif/kg", value: `${tarifKg} ${currency}` },
-        { label: "Poids", value: `${weight} kg` },
+        { label: t.ratePerKg, value: `${tarifKg} ${currency}` },
+        { label: t.weight, value: `${weight} kg` },
       ],
       results: [
-        { label: "Coût total", value: `${formatNumber(result.cost)} ${currency}` },
+        { label: t.totalCost, value: `${formatNumber(result.cost)} ${currency}` },
       ],
-      transitTime: getTransitLabel("plane"),
+      transitTime: getTransitLabel("plane", t.days),
     });
     
-    toast.success("PDF exporté !");
+    toast.success(t.pdfExported);
   };
 
   const resetForm = () => {
@@ -86,15 +87,10 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
   return (
     <div className="min-h-screen gradient-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="gap-2 text-muted-foreground hover:text-foreground"
-          >
+          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-5 w-5" />
-            Retour
+            {t.back}
           </Button>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
@@ -102,124 +98,77 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
           </div>
         </div>
 
-        {/* Title */}
         <div className="flex items-center justify-center gap-3 mb-8 animate-fade-up">
           <div className="gradient-plane p-3 rounded-xl">
             <Plane className="h-8 w-8 text-primary-foreground" />
           </div>
-          <h1 className="font-display text-3xl font-bold text-gradient-plane">
-            Calcul Avion
-          </h1>
+          <h1 className="font-display text-3xl font-bold text-gradient-plane">{t.planeCalc}</h1>
         </div>
 
-        {/* Form */}
         <div className="bg-card border border-border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <CurrencySelect value={currency} onChange={setCurrency} />
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
               <Weight className="h-4 w-4 text-muted-foreground" />
-              Tarif par kilogramme
+              {t.ratePerKg}
             </Label>
-            <Input
-              type="number"
-              value={tarifKg}
-              onChange={(e) => setTarifKg(e.target.value)}
-              placeholder="Ex: 3000"
-              className="bg-secondary border-border"
-            />
+            <Input type="number" value={tarifKg} onChange={(e) => setTarifKg(e.target.value)} placeholder="Ex: 3000" className="bg-secondary border-border" />
           </div>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
               <Weight className="h-4 w-4 text-muted-foreground" />
-              Poids du colis (en kg)
+              {t.packageWeight}
             </Label>
-            <Input
-              type="number"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              placeholder="Ex: 25"
-              className="bg-secondary border-border"
-            />
+            <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="Ex: 25" className="bg-secondary border-border" />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-4">
-            <Button
-              onClick={calculateCost}
-              disabled={!isValid}
-              className="flex-1 gradient-plane text-primary-foreground hover:opacity-90 transition-opacity gap-2"
-            >
+            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-plane text-primary-foreground hover:opacity-90 transition-opacity gap-2">
               <Calculator className="h-5 w-5" />
-              Calculer
+              {t.calculate}
             </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setShowModal(true)}
-              className="gap-2"
-            >
+            <Button variant="secondary" onClick={() => setShowModal(true)} className="gap-2">
               <RotateCcw className="h-5 w-5" />
-              Refaire
+              {t.reset}
             </Button>
           </div>
         </div>
 
-        {/* Result */}
         {result && (
           <div className="mt-6 bg-card border border-border rounded-2xl p-6 animate-fade-up glow-plane">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-bold text-foreground">
-                Résultat
-              </h2>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleExportPdf}
-                className="gap-2"
-              >
+              <h2 className="font-display text-xl font-bold text-foreground">{t.results}</h2>
+              <Button variant="outline" size="sm" onClick={handleExportPdf} className="gap-2">
                 <FileDown className="h-4 w-4" />
                 PDF
               </Button>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-muted-foreground">Poids du colis</span>
-                <span className="font-semibold text-foreground">
-                  {formatNumber(result.weight)} kg
-                </span>
+                <span className="text-muted-foreground">{t.packageWeight}</span>
+                <span className="font-semibold text-foreground">{formatNumber(result.weight)} kg</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-border">
-                <span className="text-muted-foreground">Coût total</span>
-                <span className="font-display text-2xl font-bold text-gradient-plane">
-                  {formatNumber(result.cost)} {currency}
-                </span>
+                <span className="text-muted-foreground">{t.totalCost}</span>
+                <span className="font-display text-2xl font-bold text-gradient-plane">{formatNumber(result.cost)} {currency}</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Clock className="h-4 w-4" />
-                  Délai estimé
+                  {t.estimatedDelay}
                 </span>
-                <span className="font-semibold text-plane">
-                  {getTransitLabel("plane")}
-                </span>
+                <span className="font-semibold text-plane">{getTransitLabel("plane", t.days)}</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Footer */}
-        <p className="text-center text-muted-foreground text-sm mt-8">
-          By Mr.G
-        </p>
+        <p className="text-center text-muted-foreground text-sm mt-8">By Mr.G</p>
       </div>
 
-      <ConfirmModal
-        isOpen={showModal}
-        onConfirm={resetForm}
-        onCancel={() => setShowModal(false)}
-        variant="plane"
-      />
+      <ConfirmModal isOpen={showModal} onConfirm={resetForm} onCancel={() => setShowModal(false)} variant="plane" />
     </div>
   );
 };
