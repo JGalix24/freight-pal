@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 
 export type Language = "fr" | "en" | "es";
 
@@ -359,19 +359,30 @@ const translations: Record<Language, Translations> = {
   },
 };
 
-export const useLanguage = () => {
-  const [language, setLanguageState] = useState<Language>("fr");
+// Global store for language to sync all components
+let currentLanguage: Language = (localStorage.getItem(LANGUAGE_KEY) as Language) || "fr";
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    const stored = localStorage.getItem(LANGUAGE_KEY) as Language | null;
-    if (stored && translations[stored]) {
-      setLanguageState(stored);
-    }
-  }, []);
+function getLanguageSnapshot(): Language {
+  return currentLanguage;
+}
+
+function subscribeLanguage(callback: () => void) {
+  listeners.add(callback);
+  return () => listeners.delete(callback);
+}
+
+function setGlobalLanguage(lang: Language) {
+  currentLanguage = lang;
+  localStorage.setItem(LANGUAGE_KEY, lang);
+  listeners.forEach((l) => l());
+}
+
+export const useLanguage = () => {
+  const language = useSyncExternalStore(subscribeLanguage, getLanguageSnapshot);
 
   const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem(LANGUAGE_KEY, lang);
+    setGlobalLanguage(lang);
   }, []);
 
   const t = translations[language];
@@ -384,12 +395,7 @@ export const useLanguage = () => {
     }
   }, [language]);
 
-  return {
-    language,
-    setLanguage,
-    t,
-    getDateLocale,
-  };
+  return { language, setLanguage, t, getDateLocale };
 };
 
 export const LANGUAGES = [
