@@ -1,4 +1,4 @@
-import { Ship, Plane, Scale, Boxes, Settings, Clock } from "lucide-react";
+import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
@@ -107,6 +107,37 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
               variant="multi"
               onClick={() => onSelectMode("multi")}
             />
+          </div>
+        </div>
+
+        {/* How it works */}
+        <div className="w-full max-w-5xl mt-16 animate-fade-up" style={{ animationDelay: "0.4s" }}>
+          <h2 className="font-display text-xl md:text-2xl font-semibold text-foreground text-center mb-4">
+            {t.howItWorks}
+          </h2>
+          <p className="text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
+            {t.howItWorksSubtitle}
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: MousePointerClick, title: t.step1Title, desc: t.step1Desc, num: "1" },
+              { icon: ClipboardEdit, title: t.step2Title, desc: t.step2Desc, num: "2" },
+              { icon: BarChart3, title: t.step3Title, desc: t.step3Desc, num: "3" },
+              { icon: FileDown, title: t.step4Title, desc: t.step4Desc, num: "4" },
+            ].map((step) => (
+              <div
+                key={step.num}
+                className="bg-card border border-border rounded-2xl p-6 text-center space-y-3 hover:border-primary/50 transition-colors"
+              >
+                <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                  {step.num}
+                </div>
+                <step.icon className="h-7 w-7 mx-auto text-primary" />
+                <h3 className="font-display font-semibold text-foreground">{step.title}</h3>
+                <p className="text-sm text-muted-foreground">{step.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </main>
