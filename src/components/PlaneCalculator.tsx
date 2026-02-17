@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { ArrowLeft, Plane, Calculator, RotateCcw, Weight, FileDown, Clock } from "lucide-react";
+import { ArrowLeft, Plane, Calculator, RotateCcw, Weight, FileDown, Clock, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
+import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useHistory } from "@/hooks/useHistory";
@@ -20,14 +21,26 @@ interface PlaneCalculatorProps {
 }
 
 export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculatorProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
+  const [country, setCountry] = useState("TG");
   const [tarifKg, setTarifKg] = useState("");
   const [weight, setWeight] = useState("");
   const [result, setResult] = useState<{ weight: number; cost: number } | null>(null);
   const [showModal, setShowModal] = useState(false);
   
   const { saveToHistory } = useHistory();
+
+  const getArrivalText = () => {
+    const c = COUNTRIES.find(c => c.code === country);
+    if (!c) return "";
+    const dest = getCountryPreposition(c, language);
+    return `${t.arrivalMessage} ${dest} dans ${getTransitLabel("plane", t.days)}`;
+  };
+
+  const getPaymentText = (cost: string) => {
+    return `${t.paymentMessage} ${cost} ${currency}`;
+  };
 
   const calculateCost = () => {
     const w = parseFloat(weight);
@@ -62,7 +75,8 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
         { label: t.totalCost, value: `${formatNumber(result.cost)} ${currency}` },
       ],
       transitTime: getTransitLabel("plane", t.days),
-      arrivalMessage: `Votre colis sera au Togo dans ${getTransitLabel("plane", t.days)}`,
+      arrivalMessage: getArrivalText(),
+      paymentMessage: getPaymentText(formatNumber(result.cost)),
     });
     
     toast.success(t.pdfExported);
@@ -70,6 +84,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
 
   const resetForm = () => {
     setCurrency("FCFA");
+    setCountry("TG");
     setTarifKg("");
     setWeight("");
     setResult(null);
@@ -108,6 +123,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <CurrencySelect value={currency} onChange={setCurrency} />
+          <CountrySelect value={country} onChange={setCountry} />
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
@@ -155,12 +171,21 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
                 <span className="text-muted-foreground">{t.totalCost}</span>
                 <span className="font-display text-2xl font-bold text-gradient-plane">{formatNumber(result.cost)} {currency}</span>
               </div>
-              <div className="flex justify-between items-center py-2">
+              <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {t.estimatedDelay}
                 </span>
                 <span className="font-semibold text-plane">{getTransitLabel("plane", t.days)}</span>
+              </div>
+              <div className="bg-blue-500/10 rounded-lg p-3 text-center">
+                <p className="text-sm font-medium text-blue-400">{getArrivalText()}</p>
+              </div>
+              <div className="bg-amber-500/10 rounded-lg p-3 text-center flex items-center justify-center gap-2">
+                <Wallet className="h-4 w-4 text-amber-400" />
+                <p className="text-sm font-medium text-amber-400">
+                  {getPaymentText(formatNumber(result.cost))}
+                </p>
               </div>
             </div>
           </div>

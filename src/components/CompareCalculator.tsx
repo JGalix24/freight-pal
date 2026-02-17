@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight, DollarSign, FileDown, Clock } from "lucide-react";
+import { ArrowLeft, Scale, Calculator, RotateCcw, Ship, Plane, TrendingDown, Ruler, Weight, DollarSign, FileDown, Clock, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
 import { exportToPdf } from "@/lib/exportPdf";
@@ -31,8 +32,9 @@ interface CompareResult {
 }
 
 export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalculatorProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
+  const [country, setCountry] = useState("TG");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -93,6 +95,14 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
         { label: t.savings, value: `${formatNumber(result.percentage, 1)}%` },
       ],
       transitTime: `${t.ship}: ${getTransitLabel("ship", t.days)} | ${t.plane}: ${getTransitLabel("plane", t.days)}`,
+      arrivalMessage: (() => {
+        const c = COUNTRIES.find(c => c.code === country);
+        if (!c) return "";
+        const dest = getCountryPreposition(c, language);
+        const transitType = result.winner === "ship" ? "ship" : "plane";
+        return `${t.arrivalMessage} ${dest} dans ${getTransitLabel(transitType, t.days)}`;
+      })(),
+      paymentMessage: `${t.paymentMessage} ${formatNumber(result.winner === "ship" ? result.shipCost : result.planeCost)} ${currency}`,
     });
     
     toast.success(t.pdfExported);
@@ -100,6 +110,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
 
   const resetForm = () => {
     setCurrency("FCFA");
+    setCountry("TG");
     setShipTarifCBM("");
     setLength("");
     setWidth("");
@@ -147,6 +158,9 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               <CurrencySelect value={currency} onChange={setCurrency} />
             </div>
           </div>
+        </div>
+        <div className="bg-card border border-border rounded-2xl p-4 mb-6 animate-fade-up">
+          <CountrySelect value={country} onChange={setCountry} />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>

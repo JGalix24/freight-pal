@@ -9,6 +9,7 @@ interface PdfData {
   results: { label: string; value: string }[];
   transitTime?: string;
   arrivalMessage?: string;
+  paymentMessage?: string;
 }
 
 // Clean text to avoid encoding issues in jsPDF (no emojis, no narrow no-break spaces)
@@ -100,6 +101,19 @@ export const exportToPdf = (data: PdfData) => {
     doc.setFontSize(11);
     doc.setFont(undefined as any, "bold");
     doc.text(cleanText(data.arrivalMessage), pageWidth / 2, yPos + 6, { align: "center" });
+    doc.setFont(undefined as any, "normal");
+  }
+
+  // --- Payment info ---
+  if (data.paymentMessage) {
+    yPos += data.arrivalMessage ? 28 : 14;
+    doc.setFillColor(255, 243, 224);
+    doc.roundedRect(margin, yPos - 6, contentWidth, 24, 4, 4, "F");
+
+    doc.setTextColor(194, 120, 3);
+    doc.setFontSize(11);
+    doc.setFont(undefined as any, "bold");
+    doc.text(cleanText(data.paymentMessage), pageWidth / 2, yPos + 6, { align: "center" });
     doc.setFont(undefined as any, "normal");
   }
 

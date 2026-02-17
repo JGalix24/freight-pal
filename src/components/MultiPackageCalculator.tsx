@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Package, Calculator, RotateCcw, Ship, Plane, Plus, Trash2, Boxes } from "lucide-react";
+import { ArrowLeft, Package, Calculator, RotateCcw, Ship, Plane, Plus, Trash2, Boxes, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,7 +7,9 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import { getTransitLabel } from "@/lib/transitTime";
 import { cn } from "@/lib/utils";
 
 interface MultiPackageCalculatorProps {
@@ -37,8 +39,9 @@ interface PackageResult {
 }
 
 export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiPackageCalculatorProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
+  const [country, setCountry] = useState("TG");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
   const [planeTarifKg, setPlaneTarifKg] = useState("");
   
@@ -110,6 +113,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
 
   const resetForm = () => {
     setCurrency("FCFA");
+    setCountry("TG");
     setShipTarifCBM("");
     setPlaneTarifKg("");
     setPackages([{ id: 1, length: "", width: "", height: "", weight: "", quantity: "1" }]);
@@ -157,6 +161,9 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
           <h2 className="font-display text-lg font-semibold text-foreground mb-4">{t.applicableRates}</h2>
           <div className="mb-4">
             <CurrencySelect value={currency} onChange={setCurrency} />
+          </div>
+          <div className="mb-4">
+            <CountrySelect value={country} onChange={setCountry} />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -273,6 +280,34 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
                   </p>
                 </div>
               )}
+
+              {/* Arrival & Payment messages */}
+              {(() => {
+                const c = COUNTRIES.find(c => c.code === country);
+                const dest = c ? getCountryPreposition(c, language) : "";
+                return (
+                  <div className="mt-4 space-y-2">
+                    {parseFloat(shipTarifCBM) > 0 && (
+                      <div className="bg-primary-foreground/15 rounded-lg p-3 text-center">
+                        <p className="text-sm font-medium">{t.arrivalMessage} {dest} dans {getTransitLabel("ship", t.days)} (Bateau)</p>
+                        <p className="text-sm mt-1 flex items-center justify-center gap-1">
+                          <Wallet className="h-3 w-3" />
+                          {t.paymentMessage} {formatNumber(results.totalShipCost)} {currency}
+                        </p>
+                      </div>
+                    )}
+                    {parseFloat(planeTarifKg) > 0 && (
+                      <div className="bg-primary-foreground/15 rounded-lg p-3 text-center">
+                        <p className="text-sm font-medium">{t.arrivalMessage} {dest} dans {getTransitLabel("plane", t.days)} (Avion)</p>
+                        <p className="text-sm mt-1 flex items-center justify-center gap-1">
+                          <Wallet className="h-3 w-3" />
+                          {t.paymentMessage} {formatNumber(results.totalPlaneCost)} {currency}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="bg-card border border-border rounded-2xl p-6">
