@@ -4,8 +4,8 @@ export interface TransitEstimate {
 }
 
 export const TRANSIT_TIMES: Record<string, TransitEstimate> = {
-  ship: { minDays: 30, maxDays: 45 },
-  plane: { minDays: 3, maxDays: 7 },
+  ship: { minDays: 45, maxDays: 60 },
+  plane: { minDays: 7, maxDays: 14 },
 };
 
 export const getTransitLabel = (type: "ship" | "plane", daysLabel: string = "jours"): string => {

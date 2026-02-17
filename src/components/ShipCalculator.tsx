@@ -60,7 +60,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
       currency,
       date: new Date().toLocaleString("fr-FR"),
       inputs: [
-        { label: t.cbmRate, value: `${tarifCBM} ${currency}` },
+        { label: t.cbmRate, value: `${formatNumber(parseFloat(tarifCBM))} ${currency}` },
         { label: t.dimensions, value: `${length} × ${width} × ${height} cm` },
       ],
       results: [
@@ -68,6 +68,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         { label: t.totalCost, value: `${formatNumber(result.cost)} ${currency}` },
       ],
       transitTime: getTransitLabel("ship", t.days),
+      arrivalMessage: `Votre colis sera au Togo dans ${getTransitLabel("ship", t.days)}`,
     });
     
     toast.success(t.pdfExported);

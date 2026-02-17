@@ -55,13 +55,14 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
       currency,
       date: new Date().toLocaleString("fr-FR"),
       inputs: [
-        { label: t.ratePerKg, value: `${tarifKg} ${currency}` },
+        { label: t.ratePerKg, value: `${formatNumber(parseFloat(tarifKg))} ${currency}` },
         { label: t.weight, value: `${weight} kg` },
       ],
       results: [
         { label: t.totalCost, value: `${formatNumber(result.cost)} ${currency}` },
       ],
       transitTime: getTransitLabel("plane", t.days),
+      arrivalMessage: `Votre colis sera au Togo dans ${getTransitLabel("plane", t.days)}`,
     });
     
     toast.success(t.pdfExported);
