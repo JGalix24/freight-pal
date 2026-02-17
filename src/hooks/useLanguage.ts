@@ -158,6 +158,10 @@ export interface Translations {
   cancelLabel: string;
   confirmLabel: string;
   quantity: string;
+  destinationCountry: string;
+  selectCountry: string;
+  arrivalMessage: string;
+  paymentMessage: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -290,6 +294,10 @@ const translations: Record<Language, Translations> = {
     cancelLabel: "Annuler",
     confirmLabel: "Confirmer",
     quantity: "Quantité",
+    destinationCountry: "Pays de destination",
+    selectCountry: "Sélectionner un pays",
+    arrivalMessage: "Votre colis sera",
+    paymentMessage: "Pour récupérer votre colis, vous devez payer",
   },
   en: {
     home: "Home",
@@ -420,6 +428,10 @@ const translations: Record<Language, Translations> = {
     cancelLabel: "Cancel",
     confirmLabel: "Confirm",
     quantity: "Quantity",
+    destinationCountry: "Destination country",
+    selectCountry: "Select a country",
+    arrivalMessage: "Your package will arrive",
+    paymentMessage: "To collect your package, you must pay",
   },
   es: {
     home: "Inicio",
@@ -550,6 +562,10 @@ const translations: Record<Language, Translations> = {
     cancelLabel: "Cancelar",
     confirmLabel: "Confirmar",
     quantity: "Cantidad",
+    destinationCountry: "País de destino",
+    selectCountry: "Seleccionar un país",
+    arrivalMessage: "Su paquete llegará",
+    paymentMessage: "Para recoger su paquete, debe pagar",
   },
 };
 
