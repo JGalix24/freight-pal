@@ -11,6 +11,14 @@ interface PdfData {
   arrivalMessage?: string;
 }
 
+// Clean text to avoid encoding issues in jsPDF (no emojis, no narrow no-break spaces)
+const cleanText = (text: string): string => {
+  return text
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}]/gu, "")
+    .replace(/[\u202F\u00A0]/g, " ")
+    .trim();
+};
+
 export const exportToPdf = (data: PdfData) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -26,7 +34,7 @@ export const exportToPdf = (data: PdfData) => {
   doc.text("Freight-Calculator", pageWidth / 2, 18, { align: "center" });
 
   doc.setFontSize(14);
-  doc.text(data.title, pageWidth / 2, 30, { align: "center" });
+  doc.text(cleanText(data.title), pageWidth / 2, 30, { align: "center" });
 
   // Date
   doc.setTextColor(100, 116, 139);
@@ -35,13 +43,13 @@ export const exportToPdf = (data: PdfData) => {
 
   // --- Inputs section ---
   let yPos = 65;
-  doc.setFillColor(241, 245, 249); // slate-100
+  doc.setFillColor(241, 245, 249);
   doc.roundedRect(margin, yPos - 6, contentWidth, data.inputs.length * 12 + 20, 4, 4, "F");
 
   doc.setTextColor(30, 41, 59);
   doc.setFontSize(13);
   doc.setFont(undefined as any, "bold");
-  doc.text("📦  Paramètres", margin + 8, yPos + 4);
+  doc.text("Parametres", margin + 8, yPos + 4);
   doc.setFont(undefined as any, "normal");
 
   yPos += 16;
@@ -49,10 +57,10 @@ export const exportToPdf = (data: PdfData) => {
 
   data.inputs.forEach((input) => {
     doc.setTextColor(100, 116, 139);
-    doc.text(input.label, margin + 8, yPos);
+    doc.text(cleanText(input.label), margin + 8, yPos);
     doc.setTextColor(30, 41, 59);
     doc.setFont(undefined as any, "bold");
-    doc.text(input.value, pageWidth - margin - 8, yPos, { align: "right" });
+    doc.text(cleanText(input.value), pageWidth - margin - 8, yPos, { align: "right" });
     doc.setFont(undefined as any, "normal");
     yPos += 12;
   });
@@ -60,13 +68,13 @@ export const exportToPdf = (data: PdfData) => {
   // --- Results section ---
   yPos += 12;
   const resultsBoxHeight = data.results.length * 14 + 20;
-  doc.setFillColor(236, 253, 245); // emerald-50
+  doc.setFillColor(236, 253, 245);
   doc.roundedRect(margin, yPos - 6, contentWidth, resultsBoxHeight, 4, 4, "F");
 
-  doc.setTextColor(5, 150, 105); // emerald-600
+  doc.setTextColor(5, 150, 105);
   doc.setFontSize(13);
   doc.setFont(undefined as any, "bold");
-  doc.text("✅  Résultats", margin + 8, yPos + 4);
+  doc.text("Resultats", margin + 8, yPos + 4);
   doc.setFont(undefined as any, "normal");
 
   yPos += 16;
@@ -74,10 +82,10 @@ export const exportToPdf = (data: PdfData) => {
 
   data.results.forEach((result) => {
     doc.setTextColor(100, 116, 139);
-    doc.text(result.label, margin + 8, yPos);
+    doc.text(cleanText(result.label), margin + 8, yPos);
     doc.setTextColor(5, 150, 105);
     doc.setFont(undefined as any, "bold");
-    doc.text(result.value, pageWidth - margin - 8, yPos, { align: "right" });
+    doc.text(cleanText(result.value), pageWidth - margin - 8, yPos, { align: "right" });
     doc.setFont(undefined as any, "normal");
     yPos += 14;
   });
@@ -85,13 +93,13 @@ export const exportToPdf = (data: PdfData) => {
   // --- Delivery info ---
   if (data.arrivalMessage) {
     yPos += 14;
-    doc.setFillColor(239, 246, 255); // blue-50
+    doc.setFillColor(239, 246, 255);
     doc.roundedRect(margin, yPos - 6, contentWidth, 24, 4, 4, "F");
 
-    doc.setTextColor(37, 99, 235); // blue-600
+    doc.setTextColor(37, 99, 235);
     doc.setFontSize(11);
     doc.setFont(undefined as any, "bold");
-    doc.text("🚚  " + data.arrivalMessage, pageWidth / 2, yPos + 6, { align: "center" });
+    doc.text(cleanText(data.arrivalMessage), pageWidth / 2, yPos + 6, { align: "center" });
     doc.setFont(undefined as any, "normal");
   }
 
