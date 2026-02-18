@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
-import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
+import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useHistory } from "@/hooks/useHistory";
@@ -24,6 +24,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
   const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
   const [country, setCountry] = useState("TG");
+  const [customCountry, setCustomCountry] = useState("");
   const [tarifKg, setTarifKg] = useState("");
   const [weight, setWeight] = useState("");
   const [result, setResult] = useState<{ weight: number; cost: number } | null>(null);
@@ -32,6 +33,10 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
   const { saveToHistory } = useHistory();
 
   const getArrivalText = () => {
+    if (country === CUSTOM_COUNTRY_CODE) {
+      if (!customCountry) return "";
+      return `${t.arrivalMessage} en ${customCountry} dans ${getTransitLabel("plane", t.days)}`;
+    }
     const c = COUNTRIES.find(c => c.code === country);
     if (!c) return "";
     const dest = getCountryPreposition(c, language);
@@ -85,6 +90,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
   const resetForm = () => {
     setCurrency("FCFA");
     setCountry("TG");
+    setCustomCountry("");
     setTarifKg("");
     setWeight("");
     setResult(null);
@@ -123,7 +129,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <CurrencySelect value={currency} onChange={setCurrency} />
-          <CountrySelect value={country} onChange={setCountry} />
+          <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">

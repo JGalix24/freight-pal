@@ -7,7 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
+import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
 import { exportToPdf } from "@/lib/exportPdf";
@@ -35,6 +35,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
   const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
   const [country, setCountry] = useState("TG");
+  const [customCountry, setCustomCountry] = useState("");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -96,6 +97,11 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
       ],
       transitTime: `${t.ship}: ${getTransitLabel("ship", t.days)} | ${t.plane}: ${getTransitLabel("plane", t.days)}`,
       arrivalMessage: (() => {
+        if (country === CUSTOM_COUNTRY_CODE) {
+          if (!customCountry) return "";
+          const transitType = result.winner === "ship" ? "ship" : "plane";
+          return `${t.arrivalMessage} en ${customCountry} dans ${getTransitLabel(transitType, t.days)}`;
+        }
         const c = COUNTRIES.find(c => c.code === country);
         if (!c) return "";
         const dest = getCountryPreposition(c, language);
@@ -111,6 +117,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
   const resetForm = () => {
     setCurrency("FCFA");
     setCountry("TG");
+    setCustomCountry("");
     setShipTarifCBM("");
     setLength("");
     setWidth("");
@@ -160,7 +167,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
           </div>
         </div>
         <div className="bg-card border border-border rounded-2xl p-4 mb-6 animate-fade-up">
-          <CountrySelect value={country} onChange={setCountry} />
+          <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>

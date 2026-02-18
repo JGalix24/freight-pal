@@ -7,7 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { CountrySelect, COUNTRIES, getCountryPreposition } from "./CountrySelect";
+import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getTransitLabel } from "@/lib/transitTime";
 import { cn } from "@/lib/utils";
@@ -42,6 +42,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
   const { t, language } = useLanguage();
   const [currency, setCurrency] = useState("FCFA");
   const [country, setCountry] = useState("TG");
+  const [customCountry, setCustomCountry] = useState("");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
   const [planeTarifKg, setPlaneTarifKg] = useState("");
   
@@ -114,6 +115,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
   const resetForm = () => {
     setCurrency("FCFA");
     setCountry("TG");
+    setCustomCountry("");
     setShipTarifCBM("");
     setPlaneTarifKg("");
     setPackages([{ id: 1, length: "", width: "", height: "", weight: "", quantity: "1" }]);
@@ -163,7 +165,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
             <CurrencySelect value={currency} onChange={setCurrency} />
           </div>
           <div className="mb-4">
-            <CountrySelect value={country} onChange={setCountry} />
+            <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -283,8 +285,9 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
 
               {/* Arrival & Payment messages */}
               {(() => {
-                const c = COUNTRIES.find(c => c.code === country);
-                const dest = c ? getCountryPreposition(c, language) : "";
+                const dest = country === CUSTOM_COUNTRY_CODE
+                  ? (customCountry ? `en ${customCountry}` : "")
+                  : (() => { const c = COUNTRIES.find(c => c.code === country); return c ? getCountryPreposition(c, language) : ""; })();
                 return (
                   <div className="mt-4 space-y-2">
                     {parseFloat(shipTarifCBM) > 0 && (
