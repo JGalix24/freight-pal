@@ -162,6 +162,28 @@ export interface Translations {
   selectCountry: string;
   arrivalMessage: string;
   paymentMessage: string;
+
+  // Onboarding
+  onboardingWelcome: string;
+  onboardingWelcomeDesc: string;
+  onboardingModeLabel: string;
+  onboardingGuideLabel: string;
+  onboardingShipDesc: string;
+  onboardingPlaneDesc: string;
+  onboardingCompareDesc: string;
+  onboardingMultiDesc: string;
+  onboardingStep1Title: string;
+  onboardingStep1Desc: string;
+  onboardingStep2Title: string;
+  onboardingStep2Desc: string;
+  onboardingStep3Title: string;
+  onboardingStep3Desc: string;
+  onboardingStep4Title: string;
+  onboardingStep4Desc: string;
+  onboardingExportHint: string;
+  onboardingNext: string;
+  onboardingFinish: string;
+  onboardingTutorial: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -298,6 +320,26 @@ const translations: Record<Language, Translations> = {
     selectCountry: "Sélectionner un pays",
     arrivalMessage: "Votre colis sera",
     paymentMessage: "Pour récupérer votre colis, vous devez payer",
+    onboardingWelcome: "Bienvenue sur Freight-Calculator !",
+    onboardingWelcomeDesc: "Ce petit guide va vous montrer comment utiliser l'application en quelques étapes simples.",
+    onboardingModeLabel: "Mode",
+    onboardingGuideLabel: "Étape",
+    onboardingShipDesc: "Calculez le coût d'expédition par voie maritime en saisissant les dimensions de votre colis. Idéal pour les grosses marchandises.",
+    onboardingPlaneDesc: "Calculez le coût d'expédition par avion selon le poids de votre colis. Plus rapide, mais généralement plus cher.",
+    onboardingCompareDesc: "Comparez côte à côte le coût et le délai entre le bateau et l'avion pour faire le meilleur choix.",
+    onboardingMultiDesc: "Calculez le coût total pour plusieurs colis en même temps, avec détail par colis et récapitulatif global.",
+    onboardingStep1Title: "Choisissez votre mode de transport",
+    onboardingStep1Desc: "Depuis l'accueil, sélectionnez le mode qui correspond à votre besoin : Bateau, Avion, Comparaison ou Multi-colis.",
+    onboardingStep2Title: "Renseignez les informations",
+    onboardingStep2Desc: "Choisissez la devise, le pays de destination, entrez le tarif et le poids ou les dimensions de votre colis.",
+    onboardingStep3Title: "Consultez vos résultats",
+    onboardingStep3Desc: "Le coût total, le délai estimé et un message de récupération s'affichent instantanément après le calcul.",
+    onboardingStep4Title: "Exportez ou comparez",
+    onboardingStep4Desc: "Téléchargez votre résultat en PDF pour le partager, ou utilisez le mode Comparaison pour trouver la meilleure option.",
+    onboardingExportHint: "Partagez facilement votre devis en un clic",
+    onboardingNext: "Suivant",
+    onboardingFinish: "Commencer !",
+    onboardingTutorial: "Guide d'utilisation",
   },
   en: {
     home: "Home",
@@ -432,6 +474,26 @@ const translations: Record<Language, Translations> = {
     selectCountry: "Select a country",
     arrivalMessage: "Your package will arrive",
     paymentMessage: "To collect your package, you must pay",
+    onboardingWelcome: "Welcome to Freight-Calculator!",
+    onboardingWelcomeDesc: "This quick guide will show you how to use the app in a few simple steps.",
+    onboardingModeLabel: "Mode",
+    onboardingGuideLabel: "Step",
+    onboardingShipDesc: "Calculate sea freight costs by entering your package dimensions. Ideal for large or heavy goods.",
+    onboardingPlaneDesc: "Calculate air freight costs based on your package weight. Faster, but generally more expensive.",
+    onboardingCompareDesc: "Compare side-by-side the cost and transit time between sea and air shipping to make the best choice.",
+    onboardingMultiDesc: "Calculate the total cost for multiple packages at once, with per-package details and a global summary.",
+    onboardingStep1Title: "Choose your shipping mode",
+    onboardingStep1Desc: "From the home screen, select the mode that matches your need: Ship, Plane, Compare or Multi-package.",
+    onboardingStep2Title: "Enter the details",
+    onboardingStep2Desc: "Choose the currency, destination country, enter the rate and the weight or dimensions of your package.",
+    onboardingStep3Title: "View your results",
+    onboardingStep3Desc: "Total cost, estimated transit time, and a collection reminder are displayed instantly after calculation.",
+    onboardingStep4Title: "Export or compare",
+    onboardingStep4Desc: "Download your result as a PDF to share it, or use the Compare mode to find the best shipping option.",
+    onboardingExportHint: "Share your quote easily in one click",
+    onboardingNext: "Next",
+    onboardingFinish: "Let's start!",
+    onboardingTutorial: "How to use",
   },
   es: {
     home: "Inicio",
@@ -566,6 +628,26 @@ const translations: Record<Language, Translations> = {
     selectCountry: "Seleccionar un país",
     arrivalMessage: "Su paquete llegará",
     paymentMessage: "Para recoger su paquete, debe pagar",
+    onboardingWelcome: "¡Bienvenido a Freight-Calculator!",
+    onboardingWelcomeDesc: "Esta pequeña guía te mostrará cómo usar la aplicación en unos sencillos pasos.",
+    onboardingModeLabel: "Modo",
+    onboardingGuideLabel: "Paso",
+    onboardingShipDesc: "Calcula el costo de envío marítimo ingresando las dimensiones de tu paquete. Ideal para mercancías grandes.",
+    onboardingPlaneDesc: "Calcula el costo de envío aéreo según el peso de tu paquete. Más rápido, pero generalmente más caro.",
+    onboardingCompareDesc: "Compara lado a lado el costo y el tiempo de tránsito entre barco y avión para tomar la mejor decisión.",
+    onboardingMultiDesc: "Calcula el costo total para varios paquetes a la vez, con detalle por paquete y resumen global.",
+    onboardingStep1Title: "Elige tu modo de transporte",
+    onboardingStep1Desc: "Desde el inicio, selecciona el modo que corresponde a tu necesidad: Barco, Avión, Comparar o Multi-paquete.",
+    onboardingStep2Title: "Ingresa los datos",
+    onboardingStep2Desc: "Elige la moneda, el país de destino, introduce la tarifa y el peso o las dimensiones de tu paquete.",
+    onboardingStep3Title: "Consulta tus resultados",
+    onboardingStep3Desc: "El costo total, el plazo estimado y un recordatorio de recogida se muestran al instante tras el cálculo.",
+    onboardingStep4Title: "Exporta o compara",
+    onboardingStep4Desc: "Descarga tu resultado en PDF para compartirlo, o usa el modo Comparar para encontrar la mejor opción.",
+    onboardingExportHint: "Comparte tu presupuesto fácilmente en un clic",
+    onboardingNext: "Siguiente",
+    onboardingFinish: "¡Empezar!",
+    onboardingTutorial: "Cómo usarlo",
   },
 };
 
