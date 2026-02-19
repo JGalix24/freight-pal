@@ -1,8 +1,10 @@
-import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown } from "lucide-react";
+import { useState } from "react";
+import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { OnboardingModal } from "./OnboardingModal";
 import { useLanguage } from "@/hooks/useLanguage";
 
 type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
@@ -15,6 +17,7 @@ interface HomePageProps {
 
 export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps) => {
   const { t } = useLanguage();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   return (
     <div className="min-h-screen gradient-background flex flex-col">
@@ -23,6 +26,13 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
         <Logo />
         <div className="flex items-center gap-2 md:gap-3">
           <LanguageSwitcher />
+          <button
+            onClick={() => setShowOnboarding(true)}
+            className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+            title={t.onboardingTutorial}
+          >
+            <HelpCircle className="h-5 w-5" />
+          </button>
           <button
             onClick={() => onSelectMode("history")}
             className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
@@ -148,6 +158,8 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
           By <span className="font-semibold">Mr.G</span>
         </p>
       </footer>
+
+      <OnboardingModal isOpen={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </div>
   );
 };
