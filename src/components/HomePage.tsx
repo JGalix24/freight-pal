@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
@@ -18,6 +18,14 @@ interface HomePageProps {
 export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps) => {
   const { t } = useLanguage();
   const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    const seen = localStorage.getItem("freight-onboarding-seen");
+    if (!seen) {
+      setShowOnboarding(true);
+      localStorage.setItem("freight-onboarding-seen", "1");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen gradient-background flex flex-col">

@@ -7,6 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CalcHelpModal } from "./CalcHelpModal";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -145,6 +146,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             {t.back}
           </Button>
           <div className="flex items-center gap-2">
+            <CalcHelpModal mode="compare" />
             <LanguageSwitcher />
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
           </div>

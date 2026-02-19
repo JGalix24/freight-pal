@@ -7,6 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySelect } from "./CurrencySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CalcHelpModal } from "./CalcHelpModal";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getTransitLabel } from "@/lib/transitTime";
@@ -147,6 +148,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
             {t.back}
           </Button>
           <div className="flex items-center gap-2">
+            <CalcHelpModal mode="multi" />
             <LanguageSwitcher />
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
           </div>

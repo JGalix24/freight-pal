@@ -8,6 +8,7 @@ import { CurrencySelect } from "./CurrencySelect";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { ConfirmModal } from "./ConfirmModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CalcHelpModal } from "./CalcHelpModal";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
 import { exportToPdf } from "@/lib/exportPdf";
@@ -123,6 +124,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
             {t.back}
           </Button>
           <div className="flex items-center gap-2">
+            <CalcHelpModal mode="ship" />
             <LanguageSwitcher />
             <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
           </div>
