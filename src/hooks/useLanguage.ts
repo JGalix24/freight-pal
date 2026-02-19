@@ -184,6 +184,17 @@ export interface Translations {
   onboardingNext: string;
   onboardingFinish: string;
   onboardingTutorial: string;
+  onboardingReadyTitle: string;
+  onboardingReadyDesc: string;
+  onboardingFindAgain: string;
+  onboardingFindAgainDesc: string;
+  onboardingCalcHelpDesc: string;
+
+  // Contextual help steps per calculator
+  helpShipSteps: { title: string; desc: string; tip?: string }[];
+  helpPlaneSteps: { title: string; desc: string; tip?: string }[];
+  helpCompareSteps: { title: string; desc: string; tip?: string }[];
+  helpMultiSteps: { title: string; desc: string; tip?: string }[];
 }
 
 const translations: Record<Language, Translations> = {
@@ -340,6 +351,39 @@ const translations: Record<Language, Translations> = {
     onboardingNext: "Suivant",
     onboardingFinish: "Commencer !",
     onboardingTutorial: "Guide d'utilisation",
+    onboardingReadyTitle: "Vous êtes prêt(e) !",
+    onboardingReadyDesc: "Vous connaissez maintenant toutes les fonctionnalités. Lancez votre premier calcul !",
+    onboardingFindAgain: "Pour revoir ce guide",
+    onboardingFindAgainDesc: "Appuyez sur le bouton ? dans la barre du haut de la page d'accueil.",
+    onboardingCalcHelpDesc: "Dans chaque calculateur, appuyez sur le bouton ? pour voir un guide spécifique à ce mode.",
+    helpShipSteps: [
+      { title: "Le tarif CBM", desc: "Le CBM (mètre cube) est l'unité de mesure du fret maritime. Demandez ce tarif à votre transporteur.", tip: "Ex : 210 000 FCFA par m³" },
+      { title: "Les dimensions", desc: "Mesurez votre colis en centimètres : Longueur × Largeur × Hauteur. L'app calcule automatiquement le volume.", tip: "Volume = L × l × H ÷ 1 000 000" },
+      { title: "Choisir la destination", desc: "Sélectionnez le pays où le colis sera livré. Un message d'arrivée personnalisé s'affichera dans les résultats." },
+      { title: "Lire les résultats", desc: "Vous obtenez le volume en m³, le coût total, le délai estimé (45-60 jours), et le montant à payer pour récupérer votre colis." },
+      { title: "Exporter en PDF", desc: "Cliquez sur le bouton PDF pour télécharger un récapitulatif complet à partager avec votre client ou fournisseur.", tip: "Le PDF inclut toutes les infos : tarif, dimensions, coût, délai" },
+    ],
+    helpPlaneSteps: [
+      { title: "Le tarif par kg", desc: "Le fret aérien se calcule au kilogramme. Demandez le tarif au kilo à votre transporteur aérien.", tip: "Ex : 3 000 FCFA par kg" },
+      { title: "Le poids du colis", desc: "Entrez le poids réel de votre colis en kilogrammes. Le coût = Poids × Tarif par kg.", tip: "Pesez votre colis avant de saisir" },
+      { title: "Choisir la destination", desc: "Sélectionnez le pays de destination. Le délai estimé pour l'avion est de 7 à 14 jours." },
+      { title: "Lire les résultats", desc: "Vous obtenez le coût total, le délai estimé (7-14 jours) et le montant à payer pour récupérer le colis." },
+      { title: "Exporter en PDF", desc: "Téléchargez le résultat en PDF pour le partager facilement avec vos clients ou contacts.", tip: "Plus rapide que le bateau, mais généralement plus cher" },
+    ],
+    helpCompareSteps: [
+      { title: "Pourquoi comparer ?", desc: "Ce mode vous permet de voir en un coup d'œil quelle option est la moins chère : bateau ou avion, pour un même colis." },
+      { title: "Remplir la partie Bateau", desc: "Entrez le tarif CBM et les dimensions du colis pour calculer le coût maritime.", tip: "Le volume est calculé automatiquement" },
+      { title: "Remplir la partie Avion", desc: "Entrez le tarif au kg et le poids du colis pour calculer le coût aérien." },
+      { title: "Lire la comparaison", desc: "L'app affiche le gagnant (moins cher), l'économie réalisée et la différence de délai entre les deux modes.", tip: "L'avion est ~38 jours plus rapide, mais souvent plus cher" },
+      { title: "Exporter le résultat", desc: "Téléchargez la comparaison en PDF pour l'envoyer à votre client et l'aider à décider." },
+    ],
+    helpMultiSteps: [
+      { title: "Ajouter des colis", desc: "Cliquez sur « Ajouter un colis » pour chaque article à expédier. Chaque colis a ses propres dimensions, poids et quantité.", tip: "Vous pouvez ajouter autant de colis que vous voulez" },
+      { title: "Remplir chaque colis", desc: "Pour chaque colis : entrez longueur, largeur, hauteur (en cm), poids (kg) et quantité. Le sous-total est calculé automatiquement." },
+      { title: "Tarifs et destination", desc: "Choisissez la devise, le pays de destination, et entrez le tarif CBM (bateau) et/ou le tarif au kg (avion)." },
+      { title: "Calculer le total", desc: "Cliquez sur Calculer pour obtenir le coût total bateau, total avion, le volume global et le poids total de tous vos colis." },
+      { title: "Détail par colis", desc: "Le récapitulatif montre le détail de chaque colis : son volume, son coût unitaire bateau et avion.", tip: "Pratique pour les commandes avec plusieurs types de marchandises" },
+    ],
   },
   en: {
     home: "Home",
@@ -494,6 +538,39 @@ const translations: Record<Language, Translations> = {
     onboardingNext: "Next",
     onboardingFinish: "Let's start!",
     onboardingTutorial: "How to use",
+    onboardingReadyTitle: "You're all set!",
+    onboardingReadyDesc: "You now know all the features. Start your first calculation!",
+    onboardingFindAgain: "To view this guide again",
+    onboardingFindAgainDesc: "Tap the ? button in the top bar on the home page.",
+    onboardingCalcHelpDesc: "In each calculator, tap the ? button to see a guide specific to that mode.",
+    helpShipSteps: [
+      { title: "The CBM rate", desc: "CBM (cubic meter) is the unit of measurement for sea freight. Ask your carrier for this rate.", tip: "Ex: 210,000 FCFA per m³" },
+      { title: "The dimensions", desc: "Measure your package in centimeters: Length × Width × Height. The app automatically calculates the volume.", tip: "Volume = L × W × H ÷ 1,000,000" },
+      { title: "Choose the destination", desc: "Select the country where the package will be delivered. A personalized arrival message will appear in the results." },
+      { title: "Read the results", desc: "You get the volume in m³, the total cost, the estimated transit time (45-60 days), and the amount to pay to collect your package." },
+      { title: "Export to PDF", desc: "Click the PDF button to download a complete summary to share with your client or supplier.", tip: "The PDF includes all info: rate, dimensions, cost, transit time" },
+    ],
+    helpPlaneSteps: [
+      { title: "The rate per kg", desc: "Air freight is calculated per kilogram. Ask your air carrier for the per-kg rate.", tip: "Ex: 3,000 FCFA per kg" },
+      { title: "Package weight", desc: "Enter the actual weight of your package in kilograms. Cost = Weight × Rate per kg.", tip: "Weigh your package before entering" },
+      { title: "Choose the destination", desc: "Select the destination country. The estimated transit time for air is 7 to 14 days." },
+      { title: "Read the results", desc: "You get the total cost, estimated transit time (7-14 days), and the amount to pay to collect the package." },
+      { title: "Export to PDF", desc: "Download the result as a PDF to easily share with your clients or contacts.", tip: "Faster than sea, but generally more expensive" },
+    ],
+    helpCompareSteps: [
+      { title: "Why compare?", desc: "This mode lets you see at a glance which option is cheaper: sea or air, for the same package." },
+      { title: "Fill in the Ship section", desc: "Enter the CBM rate and package dimensions to calculate the sea shipping cost.", tip: "Volume is calculated automatically" },
+      { title: "Fill in the Plane section", desc: "Enter the per-kg rate and package weight to calculate the air shipping cost." },
+      { title: "Read the comparison", desc: "The app shows the winner (cheapest), the savings, and the transit time difference between the two modes.", tip: "Air is ~38 days faster, but often more expensive" },
+      { title: "Export the result", desc: "Download the comparison as a PDF to send to your client and help them decide." },
+    ],
+    helpMultiSteps: [
+      { title: "Add packages", desc: "Click 'Add a package' for each item to ship. Each package has its own dimensions, weight and quantity.", tip: "You can add as many packages as you need" },
+      { title: "Fill in each package", desc: "For each package: enter length, width, height (in cm), weight (kg) and quantity. The subtotal is calculated automatically." },
+      { title: "Rates and destination", desc: "Choose the currency, destination country, and enter the CBM rate (sea) and/or the per-kg rate (air)." },
+      { title: "Calculate the total", desc: "Click Calculate to get the total sea cost, total air cost, overall volume and total weight of all your packages." },
+      { title: "Per-package breakdown", desc: "The summary shows the details of each package: its volume, its unit sea and air cost.", tip: "Useful for orders with multiple types of goods" },
+    ],
   },
   es: {
     home: "Inicio",
@@ -648,6 +725,39 @@ const translations: Record<Language, Translations> = {
     onboardingNext: "Siguiente",
     onboardingFinish: "¡Empezar!",
     onboardingTutorial: "Cómo usarlo",
+    onboardingReadyTitle: "¡Estás listo/a!",
+    onboardingReadyDesc: "Ya conoces todas las funciones. ¡Haz tu primer cálculo!",
+    onboardingFindAgain: "Para ver esta guía de nuevo",
+    onboardingFindAgainDesc: "Toca el botón ? en la barra superior de la página de inicio.",
+    onboardingCalcHelpDesc: "En cada calculadora, toca el botón ? para ver una guía específica de ese modo.",
+    helpShipSteps: [
+      { title: "La tarifa CBM", desc: "El CBM (metro cúbico) es la unidad de medida del flete marítimo. Pide esta tarifa a tu transportista.", tip: "Ej: 210.000 FCFA por m³" },
+      { title: "Las dimensiones", desc: "Mide tu paquete en centímetros: Largo × Ancho × Alto. La app calcula el volumen automáticamente.", tip: "Volumen = L × A × H ÷ 1.000.000" },
+      { title: "Elegir el destino", desc: "Selecciona el país donde se entregará el paquete. Aparecerá un mensaje de llegada personalizado." },
+      { title: "Leer los resultados", desc: "Obtienes el volumen en m³, el costo total, el plazo estimado (45-60 días) y el monto a pagar para recoger tu paquete." },
+      { title: "Exportar a PDF", desc: "Haz clic en el botón PDF para descargar un resumen completo para compartir.", tip: "El PDF incluye toda la info: tarifa, dimensiones, costo, plazo" },
+    ],
+    helpPlaneSteps: [
+      { title: "La tarifa por kg", desc: "El flete aéreo se calcula por kilogramo. Pide la tarifa por kilo a tu transportista aéreo.", tip: "Ej: 3.000 FCFA por kg" },
+      { title: "El peso del paquete", desc: "Introduce el peso real de tu paquete en kilogramos. Costo = Peso × Tarifa por kg.", tip: "Pesa tu paquete antes de introducir el dato" },
+      { title: "Elegir el destino", desc: "Selecciona el país de destino. El plazo estimado para avión es de 7 a 14 días." },
+      { title: "Leer los resultados", desc: "Obtienes el costo total, el plazo estimado (7-14 días) y el monto a pagar para recoger el paquete." },
+      { title: "Exportar a PDF", desc: "Descarga el resultado en PDF para compartirlo fácilmente.", tip: "Más rápido que el barco, pero generalmente más caro" },
+    ],
+    helpCompareSteps: [
+      { title: "¿Por qué comparar?", desc: "Este modo te permite ver de un vistazo qué opción es más barata: barco o avión, para el mismo paquete." },
+      { title: "Rellenar la sección Barco", desc: "Introduce la tarifa CBM y las dimensiones del paquete para calcular el costo marítimo.", tip: "El volumen se calcula automáticamente" },
+      { title: "Rellenar la sección Avión", desc: "Introduce la tarifa por kg y el peso del paquete para calcular el costo aéreo." },
+      { title: "Leer la comparación", desc: "La app muestra el ganador (más barato), el ahorro y la diferencia de plazo entre los dos modos.", tip: "El avión es ~38 días más rápido, pero suele ser más caro" },
+      { title: "Exportar el resultado", desc: "Descarga la comparación en PDF para enviársela a tu cliente y ayudarle a decidir." },
+    ],
+    helpMultiSteps: [
+      { title: "Añadir paquetes", desc: "Haz clic en 'Añadir paquete' para cada artículo a enviar. Cada paquete tiene sus propias dimensiones, peso y cantidad.", tip: "Puedes añadir tantos paquetes como necesites" },
+      { title: "Rellenar cada paquete", desc: "Para cada paquete: introduce largo, ancho, alto (en cm), peso (kg) y cantidad. El subtotal se calcula automáticamente." },
+      { title: "Tarifas y destino", desc: "Elige la moneda, el país de destino e introduce la tarifa CBM (barco) y/o la tarifa por kg (avión)." },
+      { title: "Calcular el total", desc: "Haz clic en Calcular para obtener el costo total barco, total avión, el volumen global y el peso total de todos tus paquetes." },
+      { title: "Detalle por paquete", desc: "El resumen muestra el detalle de cada paquete: su volumen, su costo unitario barco y avión.", tip: "Útil para pedidos con varios tipos de mercancía" },
+    ],
   },
 };
 

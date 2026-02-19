@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Ship, Plane, Scale, Boxes, X, ChevronRight, ChevronLeft, MousePointerClick, ClipboardEdit, BarChart3, FileDown, Globe, Calculator } from "lucide-react";
+import { Ship, Plane, Scale, Boxes, X, ChevronRight, ChevronLeft, MousePointerClick, ClipboardEdit, BarChart3, FileDown, Globe, Calculator, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -21,8 +21,8 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
       desc: t.onboardingShipDesc,
       gradient: "gradient-ship",
       textGradient: "text-gradient-ship",
-      bg: "bg-blue-500/10",
-      border: "border-blue-500/30",
+      bg: "bg-ship/10",
+      border: "border-ship/30",
     },
     {
       icon: Plane,
@@ -30,8 +30,8 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
       desc: t.onboardingPlaneDesc,
       gradient: "gradient-plane",
       textGradient: "text-gradient-plane",
-      bg: "bg-sky-500/10",
-      border: "border-sky-500/30",
+      bg: "bg-plane/10",
+      border: "border-plane/30",
     },
     {
       icon: Scale,
@@ -39,8 +39,8 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
       desc: t.onboardingCompareDesc,
       gradient: "gradient-compare",
       textGradient: "text-gradient-compare",
-      bg: "bg-purple-500/10",
-      border: "border-purple-500/30",
+      bg: "bg-compare/10",
+      border: "border-compare/30",
     },
     {
       icon: Boxes,
@@ -48,8 +48,8 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
       desc: t.onboardingMultiDesc,
       gradient: "gradient-multi",
       textGradient: "text-gradient-multi",
-      bg: "bg-orange-500/10",
-      border: "border-orange-500/30",
+      bg: "bg-multi/10",
+      border: "border-multi/30",
     },
   ];
 
@@ -136,8 +136,8 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
     },
   ];
 
-  // Pages: 0 = intro, 1-4 = modes, 5-8 = tutorial steps
-  const TOTAL_PAGES = 1 + modes.length + tutorialSteps.length;
+  // Pages: 0=intro, 1-4=modes, 5-8=guide, 9=fin
+  const TOTAL_PAGES = 1 + modes.length + tutorialSteps.length + 1;
 
   const handleNext = () => {
     if (step < TOTAL_PAGES - 1) setStep(step + 1);
@@ -199,6 +199,38 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
       );
     }
 
+    // Dernière page : où retrouver le guide
+    if (step === TOTAL_PAGES - 1) {
+      return (
+        <div className="text-center space-y-5">
+          <div className="flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+              <span className="text-3xl">🎉</span>
+            </div>
+          </div>
+          <h2 className="font-display text-2xl font-bold text-foreground">{t.onboardingReadyTitle}</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto">
+            {t.onboardingReadyDesc}
+          </p>
+          <div className="bg-secondary border border-border rounded-xl p-4 text-left space-y-3">
+            <p className="text-xs font-semibold text-foreground uppercase tracking-widest">{t.onboardingFindAgain}</p>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg border border-border bg-card flex items-center justify-center shrink-0">
+                <HelpCircle className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">{t.onboardingFindAgainDesc}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg border border-border bg-card flex items-center justify-center shrink-0">
+                <BarChart3 className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">{t.onboardingCalcHelpDesc}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Pages 5-8 : Guide d'utilisation
     const tutStep = tutorialSteps[step - 1 - modes.length];
     const TutIcon = tutStep.icon;
@@ -226,14 +258,11 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
-
-      {/* Modal */}
       <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl animate-fade-up overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 flex-wrap max-w-[80%]">
             {Array.from({ length: TOTAL_PAGES }).map((_, i) => (
               <div
                 key={i}
@@ -261,7 +290,7 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5 min-h-[280px] flex flex-col justify-center">
+        <div className="px-6 py-5 min-h-[300px] flex flex-col justify-center">
           {renderContent()}
         </div>
 
