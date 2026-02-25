@@ -129,7 +129,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
           <h1 className="font-display text-3xl font-bold text-gradient-plane">{t.planeCalc}</h1>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
+        <div className="glass border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <CurrencySelect value={currency} onChange={setCurrency} />
           <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
 
@@ -162,7 +162,7 @@ export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculat
         </div>
 
         {result && (
-          <div className="mt-6 bg-card border border-border rounded-2xl p-6 animate-fade-up glow-plane">
+          <div className="mt-6 glass border rounded-2xl p-6 animate-fade-up glow-plane">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl font-bold text-foreground">{t.results}</h2>
               <Button variant="outline" size="sm" onClick={handleExportPdf} className="gap-2">

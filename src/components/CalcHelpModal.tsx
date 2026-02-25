@@ -13,6 +13,8 @@ export const CalcHelpModal = ({ mode }: CalcHelpModalProps) => {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const [slideDir, setSlideDir] = useState<"left" | "right">("left");
+  const [animKey, setAnimKey] = useState(0);
 
   const steps = (() => {
     switch (mode) {
@@ -68,7 +70,7 @@ export const CalcHelpModal = ({ mode }: CalcHelpModalProps) => {
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
-          <div className="relative w-full max-w-sm bg-card border border-border rounded-2xl shadow-2xl animate-fade-up overflow-hidden">
+          <div className="relative w-full max-w-sm glass border rounded-2xl shadow-2xl animate-fade-up overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-3">
               <div className="flex items-center gap-2">
@@ -94,19 +96,21 @@ export const CalcHelpModal = ({ mode }: CalcHelpModalProps) => {
             </div>
 
             {/* Content */}
-            <div className="px-6 py-5 min-h-[180px] flex flex-col justify-center">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-bold text-primary">{step + 1}</span>
+            <div className="px-6 py-5 min-h-[180px] flex flex-col justify-center overflow-hidden">
+              <div key={animKey} className={slideDir === "left" ? "animate-slide-left" : "animate-slide-right"}>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-primary">{step + 1}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-foreground">{steps[step].title}</h3>
                 </div>
-                <h3 className="font-display font-bold text-foreground">{steps[step].title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{steps[step].desc}</p>
+                {steps[step].tip && (
+                  <div className="mt-4 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
+                    <p className="text-xs text-primary font-medium">💡 {steps[step].tip}</p>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{steps[step].desc}</p>
-              {steps[step].tip && (
-                <div className="mt-4 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2">
-                  <p className="text-xs text-primary font-medium">💡 {steps[step].tip}</p>
-                </div>
-              )}
             </div>
 
             {/* Footer */}
@@ -114,7 +118,7 @@ export const CalcHelpModal = ({ mode }: CalcHelpModalProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setStep(s => s - 1)}
+                onClick={() => { setSlideDir("right"); setAnimKey(k => k + 1); setStep(s => s - 1); }}
                 disabled={step === 0}
                 className="gap-1 text-muted-foreground"
               >
@@ -134,7 +138,7 @@ export const CalcHelpModal = ({ mode }: CalcHelpModalProps) => {
               </div>
               <Button
                 size="sm"
-                onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : handleClose()}
+                onClick={() => { if (step < steps.length - 1) { setSlideDir("left"); setAnimKey(k => k + 1); setStep(s => s + 1); } else handleClose(); }}
                 className={`gap-1 ${gradientClass} text-primary-foreground hover:opacity-90`}
               >
                 {step === steps.length - 1 ? t.onboardingFinish : t.onboardingNext}

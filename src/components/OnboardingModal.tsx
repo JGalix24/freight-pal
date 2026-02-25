@@ -11,6 +11,8 @@ interface OnboardingModalProps {
 export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
   const { t } = useLanguage();
   const [step, setStep] = useState(0);
+  const [slideDir, setSlideDir] = useState<"left" | "right">("left");
+  const [animKey, setAnimKey] = useState(0);
 
   if (!isOpen) return null;
 
@@ -140,12 +142,19 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
   const TOTAL_PAGES = 1 + modes.length + tutorialSteps.length + 1;
 
   const handleNext = () => {
-    if (step < TOTAL_PAGES - 1) setStep(step + 1);
-    else onClose();
+    if (step < TOTAL_PAGES - 1) {
+      setSlideDir("left");
+      setAnimKey(k => k + 1);
+      setStep(step + 1);
+    } else onClose();
   };
 
   const handlePrev = () => {
-    if (step > 0) setStep(step - 1);
+    if (step > 0) {
+      setSlideDir("right");
+      setAnimKey(k => k + 1);
+      setStep(step - 1);
+    }
   };
 
   const handleClose = () => {
@@ -259,7 +268,7 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
-      <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl animate-fade-up overflow-hidden">
+      <div className="relative w-full max-w-md glass border rounded-2xl shadow-2xl animate-fade-up overflow-hidden">
         {/* Top bar */}
         <div className="flex items-center justify-between px-5 pt-5 pb-3">
           <div className="flex gap-1.5 flex-wrap max-w-[80%]">
@@ -290,8 +299,10 @@ export const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
         </div>
 
         {/* Content */}
-        <div className="px-6 py-5 min-h-[300px] flex flex-col justify-center">
-          {renderContent()}
+        <div className="px-6 py-5 min-h-[300px] flex flex-col justify-center overflow-hidden">
+          <div key={animKey} className={slideDir === "left" ? "animate-slide-left" : "animate-slide-right"}>
+            {renderContent()}
+          </div>
         </div>
 
         {/* Footer */}

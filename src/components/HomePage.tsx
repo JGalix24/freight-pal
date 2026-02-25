@@ -30,7 +30,7 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
   return (
     <div className="min-h-screen gradient-background flex flex-col">
       {/* Header */}
-      <header className="p-4 md:p-6 flex items-center justify-between">
+      <header className="p-4 md:p-6 flex items-center justify-between glass border-b">
         <Logo />
         <div className="flex items-center gap-2 md:gap-3">
           <LanguageSwitcher />
@@ -146,7 +146,7 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
             ].map((step) => (
               <div
                 key={step.num}
-                className="bg-card border border-border rounded-2xl p-6 text-center space-y-3 hover:border-primary/50 transition-colors"
+                className="glass border rounded-2xl p-6 text-center space-y-3 hover:border-primary/50 transition-colors"
               >
                 <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
                   {step.num}

@@ -6,22 +6,22 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
+    --background: 30 25% 95%;
     --foreground: 220 20% 10%;
 
-    --card: 0 0% 100%;
+    --card: 30 20% 98% / 0.6;
     --card-foreground: 220 20% 10%;
 
-    --popover: 0 0% 100%;
+    --popover: 30 20% 98% / 0.7;
     --popover-foreground: 220 20% 10%;
 
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
+    --secondary: 30 15% 93% / 0.5;
     --secondary-foreground: 220 20% 10%;
 
-    --muted: 220 14% 96%;
+    --muted: 30 15% 93% / 0.5;
     --muted-foreground: 220 10% 40%;
 
     --accent: 262 83% 58%;
@@ -30,8 +30,8 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 30 15% 85% / 0.5;
+    --input: 30 15% 85% / 0.5;
     --ring: 217 91% 60%;
 
     --radius: 0.75rem;
@@ -58,26 +58,31 @@
     --gradient-plane: linear-gradient(135deg, hsl(271 91% 65%) 0%, hsl(263 70% 50%) 100%);
     --gradient-compare: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(161 94% 30%) 100%);
     --gradient-multi: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(21 90% 48%) 100%);
-    --gradient-background: linear-gradient(135deg, hsl(220 60% 97%) 0%, hsl(0 0% 100%) 50%, hsl(270 60% 97%) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(30 30% 96%) 0%, hsl(25 20% 94%) 50%, hsl(35 25% 93%) 100%);
+
+    /* Glassmorphism */
+    --glass-bg: hsl(30 20% 98% / 0.55);
+    --glass-border: hsl(30 15% 80% / 0.3);
+    --glass-blur: 16px;
   }
 
   .dark {
     --background: 220 20% 8%;
     --foreground: 220 20% 98%;
 
-    --card: 220 20% 12%;
+    --card: 220 20% 12% / 0.6;
     --card-foreground: 220 20% 98%;
 
-    --popover: 220 20% 12%;
+    --popover: 220 20% 12% / 0.7;
     --popover-foreground: 220 20% 98%;
 
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 20% 18%;
+    --secondary: 220 20% 18% / 0.5;
     --secondary-foreground: 220 20% 98%;
 
-    --muted: 220 20% 18%;
+    --muted: 220 20% 18% / 0.5;
     --muted-foreground: 220 10% 60%;
 
     --accent: 262 83% 58%;
@@ -86,11 +91,16 @@
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 20%;
-    --input: 220 20% 20%;
+    --border: 220 20% 20% / 0.5;
+    --input: 220 20% 20% / 0.5;
     --ring: 217 91% 60%;
 
     --gradient-background: linear-gradient(135deg, hsl(220 20% 6%) 0%, hsl(220 20% 10%) 50%, hsl(260 20% 8%) 100%);
+
+    /* Glassmorphism dark */
+    --glass-bg: hsl(220 20% 12% / 0.5);
+    --glass-border: hsl(220 20% 25% / 0.3);
+    --glass-blur: 16px;
   }
 }
 
@@ -168,6 +178,23 @@
   .animate-scale-in {
     animation: scaleIn 0.3s ease-out forwards;
   }
+
+  /* Glassmorphism utility */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-color: var(--glass-border);
+  }
+
+  /* Slide animations for tutorials */
+  .animate-slide-left {
+    animation: slideLeft 0.3s ease-out forwards;
+  }
+
+  .animate-slide-right {
+    animation: slideRight 0.3s ease-out forwards;
+  }
 }
 
 @keyframes fadeUp {
@@ -203,4 +230,26 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

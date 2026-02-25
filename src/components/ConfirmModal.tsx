@@ -41,7 +41,7 @@ export const ConfirmModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={handleClose} />
       
-      <div className="relative bg-card border border-border rounded-2xl p-6 max-w-md w-full animate-scale-in shadow-xl">
+      <div className="relative glass border rounded-2xl p-6 max-w-md w-full animate-scale-in shadow-xl">
         <div className="flex flex-col items-center text-center gap-4">
           <div className={cn("p-3 rounded-full", variantStyles[variant])}>
             <AlertTriangle className="h-6 w-6 text-primary-foreground" />
