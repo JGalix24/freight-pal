@@ -159,7 +159,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
           <h1 className="font-display text-2xl md:text-3xl font-bold text-gradient-compare text-center">{t.compareTitle}</h1>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl p-4 mb-6 animate-fade-up">
+        <div className="glass border rounded-2xl p-4 mb-6 animate-fade-up">
           <div className="flex items-center gap-3">
             <DollarSign className="h-5 w-5 text-compare" />
             <span className="font-medium text-foreground">{t.commonCurrency} :</span>
@@ -168,13 +168,13 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             </div>
           </div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4 mb-6 animate-fade-up">
+        <div className="glass border rounded-2xl p-4 mb-6 animate-fade-up">
           <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
           {/* Ship Column */}
-          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+          <div className="glass border rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="gradient-ship p-2 rounded-lg">
@@ -227,7 +227,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
           </div>
 
           {/* Plane Column */}
-          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+          <div className="glass border rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="gradient-plane p-2 rounded-lg">
@@ -348,7 +348,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
               </div>
             </div>
 
-            <div className="bg-card border border-border rounded-xl p-4 text-sm text-muted-foreground">
+            <div className="glass border rounded-xl p-4 text-sm text-muted-foreground">
               <p className="font-medium text-foreground mb-2">{t.calculationDetails} :</p>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

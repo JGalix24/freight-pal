@@ -161,7 +161,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
           <h1 className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">{t.multiTitle}</h1>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl p-6 mb-6 animate-fade-up">
+        <div className="glass border rounded-2xl p-6 mb-6 animate-fade-up">
           <h2 className="font-display text-lg font-semibold text-foreground mb-4">{t.applicableRates}</h2>
           <div className="mb-4">
             <CurrencySelect value={currency} onChange={setCurrency} />
@@ -197,7 +197,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
           </div>
 
           {packages.map((pkg, index) => (
-            <div key={pkg.id} className="bg-card border border-border rounded-xl p-4">
+            <div key={pkg.id} className="glass border rounded-xl p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Package className="h-5 w-5 text-muted-foreground" />
@@ -315,7 +315,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
               })()}
             </div>
 
-            <div className="bg-card border border-border rounded-2xl p-6">
+            <div className="glass border rounded-2xl p-6">
               <h3 className="font-display text-lg font-semibold text-foreground mb-4">{t.detailPerPackage}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">

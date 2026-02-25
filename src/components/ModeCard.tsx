@@ -43,7 +43,7 @@ export const ModeCard = ({ icon: Icon, title, description, variant, onClick }: M
     <button
       onClick={onClick}
       className={cn(
-        "group relative w-full p-6 rounded-2xl bg-card border border-border",
+        "group relative w-full p-6 rounded-2xl glass border",
         "transition-all duration-300 hover:scale-105 hover:-translate-y-2",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background",
         styles.ring,
