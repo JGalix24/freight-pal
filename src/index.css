@@ -256,3 +256,206 @@
     transform: translateX(0);
   }
 }
+
+/* ======= Mode Transition Animations ======= */
+
+/* Ship sailing */
+@keyframes shipSail {
+  0% { transform: translate(-60px, 8px); opacity: 0; }
+  15% { opacity: 1; }
+  50% { transform: translate(120px, 0px); }
+  80% { transform: translate(260px, 4px); }
+  100% { transform: translate(340px, -2px); opacity: 1; }
+}
+.animate-ship-sail {
+  animation: shipSail 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Waves */
+@keyframes wave1 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+@keyframes wave2 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(15px); }
+}
+@keyframes wave3 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-10px); }
+}
+.animate-wave-1 { animation: wave1 3s ease-in-out infinite; }
+.animate-wave-2 { animation: wave2 2.5s ease-in-out infinite 0.3s; }
+.animate-wave-3 { animation: wave3 2s ease-in-out infinite 0.5s; }
+
+/* Ship flag flutter */
+@keyframes flagFlutter {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.7); }
+}
+.animate-flag {
+  animation: flagFlutter 0.6s ease-in-out infinite;
+  transform-origin: left center;
+}
+
+/* Smoke */
+@keyframes smoke1 {
+  0% { opacity: 0.4; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-15px, -20px) scale(1.8); }
+}
+@keyframes smoke2 {
+  0% { opacity: 0.3; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-20px, -25px) scale(2); }
+}
+@keyframes smoke3 {
+  0% { opacity: 0.15; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-25px, -30px) scale(2.2); }
+}
+.animate-smoke-1 { animation: smoke1 1.5s ease-out infinite; }
+.animate-smoke-2 { animation: smoke2 1.8s ease-out infinite 0.3s; }
+.animate-smoke-3 { animation: smoke3 2s ease-out infinite 0.6s; }
+
+/* Plane takeoff */
+@keyframes planeTakeoff {
+  0% { bottom: 12%; left: 5%; transform: rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  30% { bottom: 14%; left: 20%; transform: rotate(-2deg); }
+  60% { bottom: 35%; left: 45%; transform: rotate(-15deg); }
+  100% { bottom: 75%; left: 80%; transform: rotate(-25deg); opacity: 1; }
+}
+.animate-plane-takeoff {
+  animation: planeTakeoff 2.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  position: absolute;
+}
+
+/* Clouds drift */
+@keyframes cloudDrift1 {
+  0% { right: -25%; opacity: 0; }
+  20% { opacity: 0.3; }
+  100% { right: 110%; opacity: 0; }
+}
+@keyframes cloudDrift2 {
+  0% { right: -20%; opacity: 0; }
+  25% { opacity: 0.2; }
+  100% { right: 105%; opacity: 0; }
+}
+@keyframes cloudDrift3 {
+  0% { right: -30%; opacity: 0; }
+  30% { opacity: 0.15; }
+  100% { right: 115%; opacity: 0; }
+}
+.animate-cloud-1 { animation: cloudDrift1 3s linear infinite; }
+.animate-cloud-2 { animation: cloudDrift2 4s linear infinite 0.5s; }
+.animate-cloud-3 { animation: cloudDrift3 3.5s linear infinite 1s; }
+
+/* Trail */
+.animate-trail {
+  animation: trailFade 0.8s ease-out infinite;
+}
+@keyframes trailFade {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 20; }
+}
+
+/* Runway fade */
+@keyframes runwayFade {
+  0% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+  60% { opacity: 0.4; }
+  100% { opacity: 0; transform: translateX(-50%) scaleX(0.5); }
+}
+.animate-runway-fade {
+  animation: runwayFade 2s ease-out forwards;
+}
+
+/* Balance scale */
+@keyframes balance {
+  0% { transform: rotate(12deg); }
+  25% { transform: rotate(-8deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-2deg); }
+  100% { transform: rotate(0deg); }
+}
+.animate-balance {
+  animation: balance 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Fade in delayed */
+@keyframes fadeInDelayed {
+  0%, 40% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-delayed {
+  animation: fadeInDelayed 1.5s ease-out forwards;
+}
+.animate-fade-in-delayed-2 {
+  animation: fadeInDelayed 1.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+/* Multi-package boxes */
+@keyframes boxSlide1 {
+  0% { transform: translateX(-80px); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes boxSlide2 {
+  0% { transform: translateX(-80px); opacity: 0; }
+  20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes boxSlide3 {
+  0% { transform: translateX(-80px); opacity: 0; }
+  40% { opacity: 0; }
+  70% { opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.animate-box-1 { animation: boxSlide1 1.2s ease-out forwards; }
+.animate-box-2 { animation: boxSlide2 1.5s ease-out forwards; }
+.animate-box-3 { animation: boxSlide3 1.8s ease-out forwards; }
+
+/* Conveyor belt */
+@keyframes conveyor {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(25px); }
+}
+.animate-conveyor {
+  animation: conveyor 1s linear infinite;
+}
+
+/* Scan beam */
+@keyframes scanBeam {
+  0% { transform: translateX(-60px); opacity: 0; }
+  30% { opacity: 0.8; }
+  50% { transform: translateX(40px); opacity: 0.8; }
+  70% { transform: translateX(80px); opacity: 0.6; }
+  100% { transform: translateX(100px); opacity: 0; }
+}
+.animate-scan-beam {
+  animation: scanBeam 2s ease-in-out infinite;
+}
+
+/* Weight tags float up */
+@keyframes weightTag1 {
+  0%, 30% { opacity: 0; transform: translateY(10px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes weightTag2 {
+  0%, 45% { opacity: 0; transform: translateY(10px); }
+  65% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes weightTag3 {
+  0%, 55% { opacity: 0; transform: translateY(10px); }
+  75% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-weight-tag-1 { animation: weightTag1 2s ease-out forwards; }
+.animate-weight-tag-2 { animation: weightTag2 2s ease-out forwards; }
+.animate-weight-tag-3 { animation: weightTag3 2s ease-out forwards; }
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
