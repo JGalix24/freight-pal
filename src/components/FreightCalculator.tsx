@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { HomePage } from "./HomePage";
 import { ShipCalculator } from "./ShipCalculator";
 import { PlaneCalculator } from "./PlaneCalculator";
@@ -6,12 +6,17 @@ import { CompareCalculator } from "./CompareCalculator";
 import { MultiPackageCalculator } from "./MultiPackageCalculator";
 import { SettingsPage } from "./SettingsPage";
 import { HistoryPage } from "./HistoryPage";
+import { ModeTransition } from "./ModeTransition";
 
 type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
+type TransitionMode = "ship" | "plane" | "compare" | "multi";
+
+const transitionModes: TransitionMode[] = ["ship", "plane", "compare", "multi"];
 
 export const FreightCalculator = () => {
   const [mode, setMode] = useState<Mode>("home");
   const [isDark, setIsDark] = useState(true);
+  const [transitioning, setTransitioning] = useState<TransitionMode | null>(null);
 
   useEffect(() => {
     if (isDark) {
@@ -23,6 +28,25 @@ export const FreightCalculator = () => {
 
   const toggleTheme = () => setIsDark(!isDark);
   const goHome = () => setMode("home");
+
+  const handleSelectMode = useCallback((m: Mode) => {
+    if (transitionModes.includes(m as TransitionMode)) {
+      setTransitioning(m as TransitionMode);
+    } else {
+      setMode(m);
+    }
+  }, []);
+
+  const handleTransitionComplete = useCallback(() => {
+    if (transitioning) {
+      setMode(transitioning);
+      setTransitioning(null);
+    }
+  }, [transitioning]);
+
+  if (transitioning) {
+    return <ModeTransition mode={transitioning} onComplete={handleTransitionComplete} />;
+  }
 
   switch (mode) {
     case "ship":
@@ -76,7 +100,7 @@ export const FreightCalculator = () => {
     default:
       return (
         <HomePage
-          onSelectMode={setMode}
+          onSelectMode={handleSelectMode}
           isDark={isDark}
           onToggleTheme={toggleTheme}
         />
