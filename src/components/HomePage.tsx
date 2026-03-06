@@ -16,17 +16,22 @@ interface HomePageProps {
   onStartTour?: () => void;
 }
 
-export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps) => {
+export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: HomePageProps) => {
   const { t } = useLanguage();
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem("freight-onboarding-seen");
     if (!seen) {
-      setShowOnboarding(true);
+      // Start the guided tour instead of the modal for first-time users
       localStorage.setItem("freight-onboarding-seen", "1");
+      if (onStartTour) {
+        setTimeout(() => onStartTour(), 800);
+      } else {
+        setShowOnboarding(true);
+      }
     }
-  }, []);
+  }, [onStartTour]);
 
   return (
     <div className="min-h-screen gradient-background flex flex-col">
