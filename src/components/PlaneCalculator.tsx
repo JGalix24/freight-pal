@@ -24,7 +24,16 @@ interface PlaneCalculatorProps {
 
 export const PlaneCalculator = ({ onBack, isDark, onToggleTheme }: PlaneCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (tarifKg && parseFloat(tarifKg) > 0) {
+      const converted = convert(parseFloat(tarifKg), currency, newCurrency);
+      setTarifKg(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [tarifKg, setTarifKg] = useState("");
