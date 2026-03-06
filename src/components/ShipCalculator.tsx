@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { CalcHelpModal } from "./CalcHelpModal";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useCurrency } from "@/hooks/useCurrency";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel } from "@/lib/transitTime";
 import { toast } from "sonner";
