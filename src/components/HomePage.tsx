@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle } from "lucide-react";
+import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle, Sparkles } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
@@ -13,33 +13,39 @@ interface HomePageProps {
   onSelectMode: (mode: Mode) => void;
   isDark: boolean;
   onToggleTheme: () => void;
+  onStartTour?: () => void;
 }
 
-export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps) => {
+export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: HomePageProps) => {
   const { t } = useLanguage();
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem("freight-onboarding-seen");
     if (!seen) {
-      setShowOnboarding(true);
+      // Start the guided tour instead of the modal for first-time users
       localStorage.setItem("freight-onboarding-seen", "1");
+      if (onStartTour) {
+        setTimeout(() => onStartTour(), 800);
+      } else {
+        setShowOnboarding(true);
+      }
     }
-  }, []);
+  }, [onStartTour]);
 
   return (
     <div className="min-h-screen gradient-background flex flex-col">
       {/* Header */}
       <header className="p-4 md:p-6 flex items-center justify-between glass border-b">
-        <Logo />
+        <div data-tour="logo"><Logo /></div>
         <div className="flex items-center gap-2 md:gap-3">
           <LanguageSwitcher />
           <button
-            onClick={() => setShowOnboarding(true)}
+            onClick={() => onStartTour ? onStartTour() : setShowOnboarding(true)}
             className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
             title={t.onboardingTutorial}
           >
-            <HelpCircle className="h-5 w-5" />
+            <Sparkles className="h-5 w-5" />
           </button>
           <button
             onClick={() => onSelectMode("history")}
@@ -97,34 +103,42 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps)
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <ModeCard
-              icon={Ship}
-              title={t.ship.toUpperCase()}
-              description={t.shipDesc}
-              variant="ship"
-              onClick={() => onSelectMode("ship")}
-            />
-            <ModeCard
-              icon={Plane}
-              title={t.plane.toUpperCase()}
-              description={t.planeDesc}
-              variant="plane"
-              onClick={() => onSelectMode("plane")}
-            />
-            <ModeCard
-              icon={Scale}
-              title={t.compare.toUpperCase()}
-              description={t.compareDesc}
-              variant="compare"
-              onClick={() => onSelectMode("compare")}
-            />
-            <ModeCard
-              icon={Boxes}
-              title={t.multiPackage.toUpperCase()}
-              description={t.multiDesc}
-              variant="multi"
-              onClick={() => onSelectMode("multi")}
-            />
+            <div data-tour="mode-ship">
+              <ModeCard
+                icon={Ship}
+                title={t.ship.toUpperCase()}
+                description={t.shipDesc}
+                variant="ship"
+                onClick={() => onSelectMode("ship")}
+              />
+            </div>
+            <div data-tour="mode-plane">
+              <ModeCard
+                icon={Plane}
+                title={t.plane.toUpperCase()}
+                description={t.planeDesc}
+                variant="plane"
+                onClick={() => onSelectMode("plane")}
+              />
+            </div>
+            <div data-tour="mode-compare">
+              <ModeCard
+                icon={Scale}
+                title={t.compare.toUpperCase()}
+                description={t.compareDesc}
+                variant="compare"
+                onClick={() => onSelectMode("compare")}
+              />
+            </div>
+            <div data-tour="mode-multi">
+              <ModeCard
+                icon={Boxes}
+                title={t.multiPackage.toUpperCase()}
+                description={t.multiDesc}
+                variant="multi"
+                onClick={() => onSelectMode("multi")}
+              />
+            </div>
           </div>
         </div>
 

@@ -129,7 +129,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
     <div className="min-h-screen gradient-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground" data-tour="back-btn">
             <ArrowLeft className="h-5 w-5" />
             {t.back}
           </Button>
@@ -148,10 +148,14 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         </div>
 
         <div className="glass border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          <CurrencySelect value={currency} onChange={handleCurrencyChange} />
-          <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
+          <div data-tour="currency-select">
+            <CurrencySelect value={currency} onChange={handleCurrencyChange} />
+          </div>
+          <div data-tour="country-select">
+            <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
+          </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-tour="tariff-input">
             <Label className="flex items-center gap-2 text-foreground">
               <Package className="h-4 w-4 text-muted-foreground" />
               {t.cbmRatePerm3}
@@ -159,7 +163,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
             <Input type="number" value={tarifCBM} onChange={(e) => setTarifCBM(e.target.value)} placeholder="Ex: 210000" className="bg-secondary border-border" />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-tour="dimensions-input">
             <Label className="flex items-center gap-2 text-foreground">
               <Ruler className="h-4 w-4 text-muted-foreground" />
               {t.dimensionsCmLabel}
@@ -181,7 +185,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2">
+            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2" data-tour="calculate-btn">
               <Calculator className="h-5 w-5" />
               {t.calculate}
             </Button>
