@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { CalcHelpModal } from "./CalcHelpModal";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useCurrency } from "@/hooks/useCurrency";
 import { getTransitLabel } from "@/lib/transitTime";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +42,20 @@ interface PackageResult {
 
 export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiPackageCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (shipTarifCBM && parseFloat(shipTarifCBM) > 0) {
+      const converted = convert(parseFloat(shipTarifCBM), currency, newCurrency);
+      setShipTarifCBM(converted.toFixed(2));
+    }
+    if (planeTarifKg && parseFloat(planeTarifKg) > 0) {
+      const converted = convert(parseFloat(planeTarifKg), currency, newCurrency);
+      setPlaneTarifKg(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
@@ -164,7 +178,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
         <div className="glass border rounded-2xl p-6 mb-6 animate-fade-up">
           <h2 className="font-display text-lg font-semibold text-foreground mb-4">{t.applicableRates}</h2>
           <div className="mb-4">
-            <CurrencySelect value={currency} onChange={setCurrency} />
+            <CurrencySelect value={currency} onChange={handleCurrencyChange} />
           </div>
           <div className="mb-4">
             <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />

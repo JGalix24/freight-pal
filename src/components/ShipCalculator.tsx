@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { CalcHelpModal } from "./CalcHelpModal";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useCurrency } from "@/hooks/useCurrency";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel } from "@/lib/transitTime";
 import { toast } from "sonner";
@@ -23,7 +24,16 @@ interface ShipCalculatorProps {
 
 export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (tarifCBM && parseFloat(tarifCBM) > 0) {
+      const converted = convert(parseFloat(tarifCBM), currency, newCurrency);
+      setTarifCBM(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [tarifCBM, setTarifCBM] = useState("");
@@ -138,7 +148,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         </div>
 
         <div className="glass border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          <CurrencySelect value={currency} onChange={setCurrency} />
+          <CurrencySelect value={currency} onChange={handleCurrencyChange} />
           <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
 
           <div className="space-y-2">

@@ -11,6 +11,7 @@ import { CalcHelpModal } from "./CalcHelpModal";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useCurrency } from "@/hooks/useCurrency";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel, getTransitDifference } from "@/lib/transitTime";
 import { toast } from "sonner";
@@ -34,7 +35,20 @@ interface CompareResult {
 
 export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (shipTarifCBM && parseFloat(shipTarifCBM) > 0) {
+      const converted = convert(parseFloat(shipTarifCBM), currency, newCurrency);
+      setShipTarifCBM(converted.toFixed(2));
+    }
+    if (planeTarifKg && parseFloat(planeTarifKg) > 0) {
+      const converted = convert(parseFloat(planeTarifKg), currency, newCurrency);
+      setPlaneTarifKg(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
@@ -164,7 +178,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             <DollarSign className="h-5 w-5 text-compare" />
             <span className="font-medium text-foreground">{t.commonCurrency} :</span>
             <div className="flex-1 max-w-xs">
-              <CurrencySelect value={currency} onChange={setCurrency} />
+              <CurrencySelect value={currency} onChange={handleCurrencyChange} />
             </div>
           </div>
         </div>
