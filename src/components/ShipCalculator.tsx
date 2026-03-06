@@ -163,7 +163,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
             <Input type="number" value={tarifCBM} onChange={(e) => setTarifCBM(e.target.value)} placeholder="Ex: 210000" className="bg-secondary border-border" />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-tour="dimensions-input">
             <Label className="flex items-center gap-2 text-foreground">
               <Ruler className="h-4 w-4 text-muted-foreground" />
               {t.dimensionsCmLabel}
