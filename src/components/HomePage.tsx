@@ -41,11 +41,12 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: H
         <div className="flex items-center gap-2 md:gap-3">
           <LanguageSwitcher />
           <button
-            onClick={() => setShowOnboarding(true)}
+            onClick={() => onStartTour ? onStartTour() : setShowOnboarding(true)}
             className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
             title={t.onboardingTutorial}
           >
-            <HelpCircle className="h-5 w-5" />
+            <Sparkles className="h-5 w-5" />
+          </button>
           </button>
           <button
             onClick={() => onSelectMode("history")}
