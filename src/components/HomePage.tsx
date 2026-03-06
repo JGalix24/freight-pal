@@ -13,6 +13,7 @@ interface HomePageProps {
   onSelectMode: (mode: Mode) => void;
   isDark: boolean;
   onToggleTheme: () => void;
+  onStartTour?: () => void;
 }
 
 export const HomePage = ({ onSelectMode, isDark, onToggleTheme }: HomePageProps) => {
