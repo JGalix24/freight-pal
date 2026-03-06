@@ -11,6 +11,7 @@ import { CalcHelpModal } from "./CalcHelpModal";
 import { CountrySelect, COUNTRIES, CUSTOM_COUNTRY_CODE, getCountryPreposition } from "./CountrySelect";
 import { useHistory } from "@/hooks/useHistory";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useCurrency } from "@/hooks/useCurrency";
 import { exportToPdf } from "@/lib/exportPdf";
 import { getTransitLabel, getTransitDifference } from "@/lib/transitTime";
 import { toast } from "sonner";
