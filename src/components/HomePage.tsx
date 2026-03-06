@@ -47,7 +47,6 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: H
           >
             <Sparkles className="h-5 w-5" />
           </button>
-          </button>
           <button
             onClick={() => onSelectMode("history")}
             className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
