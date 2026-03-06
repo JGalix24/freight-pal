@@ -37,7 +37,7 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: H
     <div className="min-h-screen gradient-background flex flex-col">
       {/* Header */}
       <header className="p-4 md:p-6 flex items-center justify-between glass border-b">
-        <Logo />
+        <div data-tour="logo"><Logo /></div>
         <div className="flex items-center gap-2 md:gap-3">
           <LanguageSwitcher />
           <button
