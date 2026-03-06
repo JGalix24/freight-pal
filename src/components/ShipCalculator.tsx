@@ -155,7 +155,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
             <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-tour="tariff-input">
             <Label className="flex items-center gap-2 text-foreground">
               <Package className="h-4 w-4 text-muted-foreground" />
               {t.cbmRatePerm3}
