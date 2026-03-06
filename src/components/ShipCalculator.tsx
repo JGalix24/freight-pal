@@ -129,7 +129,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
     <div className="min-h-screen gradient-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" onClick={onBack} className="gap-2 text-muted-foreground hover:text-foreground" data-tour="back-btn">
             <ArrowLeft className="h-5 w-5" />
             {t.back}
           </Button>
