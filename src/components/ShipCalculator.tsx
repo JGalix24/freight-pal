@@ -185,7 +185,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2">
+            <Button onClick={calculateCost} disabled={!isValid} className="flex-1 gradient-ship text-primary-foreground hover:opacity-90 transition-opacity gap-2" data-tour="calculate-btn">
               <Calculator className="h-5 w-5" />
               {t.calculate}
             </Button>

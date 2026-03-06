@@ -7,6 +7,8 @@ import { MultiPackageCalculator } from "./MultiPackageCalculator";
 import { SettingsPage } from "./SettingsPage";
 import { HistoryPage } from "./HistoryPage";
 import { ModeTransition } from "./ModeTransition";
+import { GuidedTour } from "./GuidedTour";
+import { useTourSteps } from "@/hooks/useTourSteps";
 
 type Mode = "home" | "ship" | "plane" | "compare" | "multi" | "settings" | "history";
 type TransitionMode = "ship" | "plane" | "compare" | "multi";
@@ -18,6 +20,11 @@ export const FreightCalculator = () => {
   const [isDark, setIsDark] = useState(true);
   const [transitioning, setTransitioning] = useState<TransitionMode | null>(null);
 
+  // Guided tour state
+  const [tourActive, setTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const tourSteps = useTourSteps();
+
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
@@ -27,15 +34,18 @@ export const FreightCalculator = () => {
   }, [isDark]);
 
   const toggleTheme = () => setIsDark(!isDark);
-  const goHome = () => setMode("home");
+  const goHome = () => {
+    setMode("home");
+  };
 
   const handleSelectMode = useCallback((m: Mode) => {
+    if (tourActive) return; // During tour, navigation is handled by tour
     if (transitionModes.includes(m as TransitionMode)) {
       setTransitioning(m as TransitionMode);
     } else {
       setMode(m);
     }
-  }, []);
+  }, [tourActive]);
 
   const handleTransitionComplete = useCallback(() => {
     if (transitioning) {
@@ -44,66 +54,106 @@ export const FreightCalculator = () => {
     }
   }, [transitioning]);
 
+  const handleStartTour = useCallback(() => {
+    setTourStep(0);
+    setTourActive(true);
+  }, []);
+
+  const handleTourNavigate = useCallback((targetMode: string) => {
+    if (targetMode === "home") {
+      setMode("home");
+    } else {
+      // Skip the transition animation during tour
+      setMode(targetMode as Mode);
+    }
+  }, []);
+
+  const handleTourClose = useCallback(() => {
+    setTourActive(false);
+    setTourStep(0);
+    // Return to home if we're in a calculator during tour
+    if (mode !== "home") {
+      setMode("home");
+    }
+  }, [mode]);
+
   if (transitioning) {
     return <ModeTransition mode={transitioning} onComplete={handleTransitionComplete} />;
   }
 
-  switch (mode) {
-    case "ship":
-      return (
-        <ShipCalculator
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    case "plane":
-      return (
-        <PlaneCalculator
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    case "compare":
-      return (
-        <CompareCalculator
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    case "multi":
-      return (
-        <MultiPackageCalculator
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    case "settings":
-      return (
-        <SettingsPage
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    case "history":
-      return (
-        <HistoryPage
-          onBack={goHome}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-    default:
-      return (
-        <HomePage
-          onSelectMode={handleSelectMode}
-          isDark={isDark}
-          onToggleTheme={toggleTheme}
-        />
-      );
-  }
+  const renderPage = () => {
+    switch (mode) {
+      case "ship":
+        return (
+          <ShipCalculator
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      case "plane":
+        return (
+          <PlaneCalculator
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      case "compare":
+        return (
+          <CompareCalculator
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      case "multi":
+        return (
+          <MultiPackageCalculator
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      case "settings":
+        return (
+          <SettingsPage
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      case "history":
+        return (
+          <HistoryPage
+            onBack={goHome}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+          />
+        );
+      default:
+        return (
+          <HomePage
+            onSelectMode={handleSelectMode}
+            isDark={isDark}
+            onToggleTheme={toggleTheme}
+            onStartTour={handleStartTour}
+          />
+        );
+    }
+  };
+
+  return (
+    <>
+      {renderPage()}
+      <GuidedTour
+        steps={tourSteps}
+        isActive={tourActive}
+        currentStep={tourStep}
+        onStepChange={setTourStep}
+        onClose={handleTourClose}
+        onNavigate={handleTourNavigate}
+      />
+    </>
+  );
 };
