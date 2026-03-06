@@ -148,8 +148,12 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         </div>
 
         <div className="glass border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          <CurrencySelect value={currency} onChange={handleCurrencyChange} />
-          <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
+          <div data-tour="currency-select">
+            <CurrencySelect value={currency} onChange={handleCurrencyChange} />
+          </div>
+          <div data-tour="country-select">
+            <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
+          </div>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-foreground">
