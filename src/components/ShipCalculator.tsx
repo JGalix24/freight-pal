@@ -148,7 +148,7 @@ export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculator
         </div>
 
         <div className="glass border rounded-2xl p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          <CurrencySelect value={currency} onChange={setCurrency} />
+          <CurrencySelect value={currency} onChange={handleCurrencyChange} />
           <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
 
           <div className="space-y-2">

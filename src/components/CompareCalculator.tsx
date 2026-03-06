@@ -178,7 +178,7 @@ export const CompareCalculator = ({ onBack, isDark, onToggleTheme }: CompareCalc
             <DollarSign className="h-5 w-5 text-compare" />
             <span className="font-medium text-foreground">{t.commonCurrency} :</span>
             <div className="flex-1 max-w-xs">
-              <CurrencySelect value={currency} onChange={setCurrency} />
+              <CurrencySelect value={currency} onChange={handleCurrencyChange} />
             </div>
           </div>
         </div>

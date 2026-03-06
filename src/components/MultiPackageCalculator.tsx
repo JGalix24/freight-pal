@@ -178,7 +178,7 @@ export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiP
         <div className="glass border rounded-2xl p-6 mb-6 animate-fade-up">
           <h2 className="font-display text-lg font-semibold text-foreground mb-4">{t.applicableRates}</h2>
           <div className="mb-4">
-            <CurrencySelect value={currency} onChange={setCurrency} />
+            <CurrencySelect value={currency} onChange={handleCurrencyChange} />
           </div>
           <div className="mb-4">
             <CountrySelect value={country} onChange={setCountry} customCountry={customCountry} onCustomCountryChange={setCustomCountry} />
