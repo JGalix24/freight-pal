@@ -104,34 +104,42 @@ export const HomePage = ({ onSelectMode, isDark, onToggleTheme, onStartTour }: H
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <ModeCard
-              icon={Ship}
-              title={t.ship.toUpperCase()}
-              description={t.shipDesc}
-              variant="ship"
-              onClick={() => onSelectMode("ship")}
-            />
-            <ModeCard
-              icon={Plane}
-              title={t.plane.toUpperCase()}
-              description={t.planeDesc}
-              variant="plane"
-              onClick={() => onSelectMode("plane")}
-            />
-            <ModeCard
-              icon={Scale}
-              title={t.compare.toUpperCase()}
-              description={t.compareDesc}
-              variant="compare"
-              onClick={() => onSelectMode("compare")}
-            />
-            <ModeCard
-              icon={Boxes}
-              title={t.multiPackage.toUpperCase()}
-              description={t.multiDesc}
-              variant="multi"
-              onClick={() => onSelectMode("multi")}
-            />
+            <div data-tour="mode-ship">
+              <ModeCard
+                icon={Ship}
+                title={t.ship.toUpperCase()}
+                description={t.shipDesc}
+                variant="ship"
+                onClick={() => onSelectMode("ship")}
+              />
+            </div>
+            <div data-tour="mode-plane">
+              <ModeCard
+                icon={Plane}
+                title={t.plane.toUpperCase()}
+                description={t.planeDesc}
+                variant="plane"
+                onClick={() => onSelectMode("plane")}
+              />
+            </div>
+            <div data-tour="mode-compare">
+              <ModeCard
+                icon={Scale}
+                title={t.compare.toUpperCase()}
+                description={t.compareDesc}
+                variant="compare"
+                onClick={() => onSelectMode("compare")}
+              />
+            </div>
+            <div data-tour="mode-multi">
+              <ModeCard
+                icon={Boxes}
+                title={t.multiPackage.toUpperCase()}
+                description={t.multiDesc}
+                variant="multi"
+                onClick={() => onSelectMode("multi")}
+              />
+            </div>
           </div>
         </div>
 
