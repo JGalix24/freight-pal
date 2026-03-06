@@ -42,7 +42,20 @@ interface PackageResult {
 
 export const MultiPackageCalculator = ({ onBack, isDark, onToggleTheme }: MultiPackageCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (shipTarifCBM && parseFloat(shipTarifCBM) > 0) {
+      const converted = convert(parseFloat(shipTarifCBM), currency, newCurrency);
+      setShipTarifCBM(converted.toFixed(2));
+    }
+    if (planeTarifKg && parseFloat(planeTarifKg) > 0) {
+      const converted = convert(parseFloat(planeTarifKg), currency, newCurrency);
+      setPlaneTarifKg(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [shipTarifCBM, setShipTarifCBM] = useState("");
