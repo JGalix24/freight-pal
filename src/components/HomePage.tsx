@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle } from "lucide-react";
+import { Ship, Plane, Scale, Boxes, Settings, Clock, MousePointerClick, ClipboardEdit, BarChart3, FileDown, HelpCircle, Sparkles } from "lucide-react";
 import { Logo } from "./Logo";
 import { ModeCard } from "./ModeCard";
 import { ThemeToggle } from "./ThemeToggle";
