@@ -24,7 +24,16 @@ interface ShipCalculatorProps {
 
 export const ShipCalculator = ({ onBack, isDark, onToggleTheme }: ShipCalculatorProps) => {
   const { t, language } = useLanguage();
+  const { convert } = useCurrency();
   const [currency, setCurrency] = useState("FCFA");
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (tarifCBM && parseFloat(tarifCBM) > 0) {
+      const converted = convert(parseFloat(tarifCBM), currency, newCurrency);
+      setTarifCBM(converted.toFixed(2));
+    }
+    setCurrency(newCurrency);
+  };
   const [country, setCountry] = useState("TG");
   const [customCountry, setCustomCountry] = useState("");
   const [tarifCBM, setTarifCBM] = useState("");
