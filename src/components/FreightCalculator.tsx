@@ -39,7 +39,11 @@ export const FreightCalculator = () => {
   };
 
   const handleSelectMode = useCallback((m: Mode) => {
-    if (tourActive) return; // During tour, navigation is handled by tour
+    if (tourActive) {
+      // During tour: skip transition animation, navigate immediately
+      setMode(m);
+      return;
+    }
     if (transitionModes.includes(m as TransitionMode)) {
       setTransitioning(m as TransitionMode);
     } else {
