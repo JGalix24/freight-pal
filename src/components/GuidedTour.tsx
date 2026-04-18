@@ -230,11 +230,10 @@ export const GuidedTour = ({
 
   return (
     <div className="fixed inset-0 z-[9999]" style={{ pointerEvents: "none" }}>
-      {/* Dark overlay with cutout */}
+      {/* Dark overlay with cutout - click-through so target stays interactive */}
       <svg
         className="absolute inset-0 w-full h-full transition-all duration-500"
-        style={{ pointerEvents: "auto" }}
-        onClick={(e) => e.stopPropagation()}
+        style={{ pointerEvents: "none" }}
       >
         <defs>
           <mask id="tour-mask">
@@ -278,20 +277,7 @@ export const GuidedTour = ({
         />
       )}
 
-      {/* Make the target area clickable */}
-      {targetRect && (
-        <div
-          className="absolute rounded-xl"
-          style={{
-            top: targetRect.top,
-            left: targetRect.left,
-            width: targetRect.width,
-            height: targetRect.height,
-            pointerEvents: "auto",
-            cursor: step.requireClick ? "pointer" : "default",
-          }}
-        />
-      )}
+      {/* Target area is naturally clickable since overlay is click-through */}
 
       {/* Arrow */}
       {targetRect && !waitingForTarget && (
