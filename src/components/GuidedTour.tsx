@@ -179,21 +179,21 @@ export const GuidedTour = ({
     const el = findTarget();
     if (!el) return;
 
-    const handler = (e: Event) => {
-      if (step.navigateTo && onNavigate) {
-        onNavigate(step.navigateTo);
-        // Move to next step after navigation
-        setTimeout(() => {
-          onStepChange(currentStep + 1);
-        }, 600);
-      } else {
+    const handler = () => {
+      if (currentStep < steps.length - 1) {
         onStepChange(currentStep + 1);
+      } else {
+        onClose();
+      }
+
+      if (step.navigateTo && onNavigate) {
+        requestAnimationFrame(() => onNavigate(step.navigateTo!));
       }
     };
 
     el.addEventListener("click", handler, { once: true });
     return () => el.removeEventListener("click", handler);
-  }, [isActive, step, findTarget, currentStep, onStepChange, onNavigate]);
+  }, [isActive, step, steps.length, findTarget, currentStep, onStepChange, onNavigate, onClose]);
 
   // Animation on step change
   useEffect(() => {
